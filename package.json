@@ -1,0 +1,23 @@
+{
+  "name": "node-red-contrib-evohome",
+  "version": "0.0.1",
+  "description": "Evohome integration for NodeRED",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "NodeRED",
+    "node-red",
+    "Honeywell",
+    "Evohome",
+    "IoT"
+  ],
+  "author": "Danny Yates <danny@codeaholics.org>",
+  "license": "Private",
+  "node-red" : {
+    "nodes": {
+      "evohome": "evohome.js"
+    }
+  }
+}
