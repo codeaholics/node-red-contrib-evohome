@@ -7,9 +7,12 @@ module.exports = function(RED) {
 
         node.host = n.host;
         node.port = n.port;
+        node.closing = false;
+        node.reconnectTimeout = null;
+        node.buffer = '';
 
         node.ensureConnection = function() {
-            if (node.socket) return node.socket;
+            if (node.socket) return;
 
             node.log('connecting');
             node.socket = net.connect(node.port, node.host);
@@ -23,21 +26,43 @@ module.exports = function(RED) {
                 node.log('connected');
             });
 
+            node.socket.on('data', function(buf) {
+                node.buffer += buf.toString();
+                var lines = node.buffer.split(/\n/);
+                node.buffer = lines.pop();
+                lines.forEach(function(line) {
+                    node.emit('evohome-msg', line);
+                });
+            });
+
+            node.socket.on('end', function() {
+                if (node.buffer.length > 0) {
+                    var line = buffer;
+                    buffer = '';
+                    node.emit('evohome-msg', line);
+                }
+            });
+
             node.socket.on('close', function() {
                 if (!node.socket) return;
 
                 node.log('closed');
                 node.socket.unref();
                 node.socket = null;
-            });
 
-            return node.socket;
+                if (!node.closing) {
+                    node.log('scheduling reconnect attempt');
+                    node.reconnectTimeout = setTimeout(node.ensureConnection, 5000);
+                }
+            });
         }
 
         node.on('close', function() {
             if (!node.socket) return;
 
             node.log('closing');
+            node.closing = true;
+            clearTimeout(node.reconnectTimeout);
             node.socket.end();
             node.socket.unref();
             node.socket = null;
@@ -53,17 +78,11 @@ module.exports = function(RED) {
         node.server = RED.nodes.getNode(config.server);
         if (node.server) {
             node.log('ensuring connection');
-            var socket = node.server.ensureConnection();
-            socket.on('data', function(buf) {
-                var buffer = context.get('buffer') || '';
-                buffer += buf.toString();
-                lines = buffer.split(/\n/);
-                context.set('buffer', lines.pop());
-                lines.forEach(function(line) {
-                    node.send({
-                        timestamp: Date.now(),
-                        payload: line.trim()
-                    });
+            node.server.ensureConnection();
+            node.server.on('evohome-msg', function(line) {
+                node.send({
+                    timestamp: Date.now(),
+                    payload: line.trim()
                 });
             });
         }
