@@ -58,14 +58,15 @@ module.exports = function(RED) {
         }
 
         node.on('close', function() {
-            if (!node.socket) return;
-
             node.log('closing');
             node.closing = true;
             clearTimeout(node.reconnectTimeout);
-            node.socket.end();
-            node.socket.unref();
-            node.socket = null;
+
+            if (node.socket) {
+                node.socket.end();
+                node.socket.unref();
+                node.socket = null;
+            }
         });
     }
     RED.nodes.registerType('evohome-tcp-connection', EvohomeTCPConnection);
