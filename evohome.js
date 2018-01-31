@@ -1,4 +1,5 @@
 var net = require('net');
+var decoders = require('./decoders');
 
 module.exports = function(RED) {
     function EvohomeTCPConnection(n) {
@@ -134,7 +135,7 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType('evohome-out', EvohomeOut);
 
-    function EvohomeHGIDecoder(config) {
+    function EvohomeHGIParser(config) {
         RED.nodes.createNode(this, config);
         var node = this;
         node.on('input', function(msg) {
@@ -146,7 +147,7 @@ module.exports = function(RED) {
 
             msg.payload = {
                 original: msg.payload,
-                decoded: {
+                parsed: {
                     unk0: fields[0],
                     type: fields[1],
                     unk1: fields[2],
@@ -166,5 +167,24 @@ module.exports = function(RED) {
             node.send(msg);
         });
     }
-    RED.nodes.registerType('evohome-hgi-decoder', EvohomeHGIDecoder);
+    RED.nodes.registerType('evohome-hgi-parser', EvohomeHGIParser);
+
+    function EvohomeDecoder(config) {
+        RED.nodes.createNode(this, config);
+        var node = this;
+        node.on('input', function(msg) {
+            msg.payload.decoded = {};
+
+            decoder = decoders[msg.payload.parsed.cmd];
+            if (!decoder) {
+                msg.payload.decoded = {
+                    type: 'UNKNOWN'
+                }
+            } else {
+                msg.payload.decoded = decoder(msg.payload.parsed);
+            }
+            node.send(msg);
+        });
+    }
+    RED.nodes.registerType('evohome-decoder', EvohomeDecoder);
 }
