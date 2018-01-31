@@ -11,6 +11,16 @@ module.exports = function(RED) {
         node.reconnectTimeout = null;
         node.buffer = '';
 
+        function disconnected() {
+            node.emit('status', {
+                fill: 'red',
+                shape: 'dot',
+                text: 'disconnected'
+            });
+        }
+
+        disconnected();
+
         node.ensureConnection = function() {
             if (node.socket) return;
 
@@ -18,12 +28,23 @@ module.exports = function(RED) {
             node.socket = net.connect(node.port, node.host);
             node.socket.setEncoding('binary');  // not UTF-8, not ASCII
 
+            node.emit('status', {
+                fill: 'green',
+                shape: 'ring',
+                text: 'connecting'
+            });
+
             node.socket.on('error', function(err) {
                 node.error(err);
             });
 
             node.socket.on('connect', function() {
                 node.log('connected');
+                node.emit('status', {
+                    fill: 'green',
+                    shape: 'dot',
+                    text: 'connected'
+                });
             });
 
             node.socket.on('data', function(buf) {
@@ -49,6 +70,7 @@ module.exports = function(RED) {
                 node.log('closed');
                 node.socket.unref();
                 node.socket = null;
+                disconnected();
 
                 if (!node.closing) {
                     node.log('scheduling reconnect attempt');
@@ -66,6 +88,7 @@ module.exports = function(RED) {
             node.log('closing');
             node.closing = true;
             clearTimeout(node.reconnectTimeout);
+            disconnected();
 
             if (node.socket) {
                 node.socket.end();
@@ -89,6 +112,9 @@ module.exports = function(RED) {
                     payload: line.trim()
                 });
             });
+            node.server.on('status', function(status) {
+                node.status(status);
+            });
         }
     }
     RED.nodes.registerType('evohome-in', EvohomeIn);
@@ -101,6 +127,9 @@ module.exports = function(RED) {
             if (node.server) {
                 node.server.send(msg.payload);
             }
+        });
+        node.server.on('status', function(status) {
+            node.status(status);
         });
     }
     RED.nodes.registerType('evohome-out', EvohomeOut);
