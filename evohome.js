@@ -57,6 +57,11 @@ module.exports = function(RED) {
             });
         }
 
+        node.send = function(line) {
+            node.ensureConnection();
+            node.socket.write(line + '\n', 'binary');
+        }
+
         node.on('close', function() {
             node.log('closing');
             node.closing = true;
@@ -92,10 +97,11 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         var node = this;
         node.server = RED.nodes.getNode(config.server);
-        if (node.server) {
-            node.log('ensuring connection');
-            node.server.ensureConnection();
-        }
+        node.on('input', function(msg) {
+            if (node.server) {
+                node.server.send(msg.payload);
+            }
+        });
     }
     RED.nodes.registerType('evohome-out', EvohomeOut);
 
