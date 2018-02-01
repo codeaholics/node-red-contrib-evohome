@@ -1,106 +1,97 @@
-function externalSensor(parsed) {
+var batteryInfo = require('./decoders/battery-info');
+var zoneTemp = require('./decoders/zone-temp');
+
+function externalSensor(m) {
     return {
         type: 'EXTERNAL_SENSOR'
     };
 }
 
-function zoneName(parsed) {
+function zoneName(m) {
     return {
         type: 'ZONE_NAME'
     };
 }
 
-function heatDemand(parsed) {
+function heatDemand(m) {
     return {
         type: 'HEAT_DEMAND'
     };
 }
 
-function zoneInfo(parsed) {
+function zoneInfo(m) {
     return {
         type: 'ZONE_INFO'
     };
 }
 
-function deviceInfo(parsed) {
+function deviceInfo(m) {
     return {
         type: 'DEVICE_INFO'
     };
 }
 
-function batteryInfo(parsed) {
-    return {
-        type: 'BATTERY_INFO'
-    };
-}
-
-function sysInfo(parsed) {
+function sysInfo(m) {
     return {
         type: 'SYS_INFO'
     };
 }
 
-function dhwTemp(parsed) {
+function dhwTemp(m) {
     return {
         type: 'DHW_TEMP'
     };
 }
 
-function zoneWindow(parsed) {
+function zoneWindow(m) {
     return {
         type: 'ZONE_WINDOW'
     };
 }
 
-function dhwState(parsed) {
+function dhwState(m) {
     return {
         type: 'DHW_STATE'
     };
 }
 
-function binding(parsed) {
+function binding(m) {
     return {
         type: 'BINDING'
     };
 }
 
-function setpoint(parsed) {
+function setpoint(m) {
     return {
         type: 'SETPOINT'
     };
 }
 
-function setpointOverride(parsed) {
+function setpointOverride(m) {
     return {
         type: 'SETPOINT_OVERRIDE'
     };
 }
 
-function controllerMode(parsed) {
+function controllerMode(m) {
     return {
         type: 'CONTROLLER_MODE'
     };
 }
 
-function zoneTemp(parsed) {
-    return {
-        type: 'ZONE_TEMP'
-    };
-}
-
-function heatDemand(parsed) {
+function heatDemand(m) {
     return {
         type: 'HEAT_DEMAND'
     };
 }
 
-function actuatorCheck(parsed) {
+function actuatorCheck(m) {
     return {
         type: 'ACTUATOR_CHECK'
     };
 }
 
-function actuatorState(parsed) {
+function actuatorState(m) {
     return {
         type: 'ACTUATOR_STATE'
     };

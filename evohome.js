@@ -1,5 +1,6 @@
 var net = require('net');
 var decoders = require('./decoders');
+var Message = require('./message');
 
 module.exports = function(RED) {
     function EvohomeTCPConnection(n) {
@@ -157,7 +158,7 @@ module.exports = function(RED) {
                         fields[5]
                     ],
                     cmd: fields[6],
-                    len: fields[7],
+                    len: +fields[7],
                     payload: {
                         raw: fields[8],
                         bytes: Buffer.from(fields[8], 'hex')
@@ -184,10 +185,19 @@ module.exports = function(RED) {
                 msg.payload.decoded = {
                     type: 'UNKNOWN'
                 }
+                node.send(msg);
             } else {
-                msg.payload.decoded = decoder(msg.payload.parsed);
+                try {
+                    var m = new Message(msg.payload.parsed, node.config);
+                    var decoded = decoder(m);
+                    if (decoded) {
+                        msg.payload.decoded = decoded;
+                        node.send(msg);
+                    }
+                } catch(e) {
+                    node.error(msg.payload.parsed.cmd + ': ' + e.message + ' [' + msg.payload.original + ']');
+                }
             }
-            node.send(msg);
         });
     }
     RED.nodes.registerType('evohome-decoder', EvohomeDecoder);
