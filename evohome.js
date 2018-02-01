@@ -146,6 +146,8 @@ module.exports = function(RED) {
                 return;
             }
 
+            // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/1
+
             msg.payload = {
                 original: msg.payload,
                 parsed: {

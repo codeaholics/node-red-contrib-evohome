@@ -5,6 +5,7 @@ var ADDR_TYPE_OPENTHERM = 10;
 var ADDR_TYPE_RELAY = 13;
 var ADDR_TYPE_GATEWAY = 18;
 var ADDR_TYPE_REMOTE = 30;
+// TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/3
 
 function Message(parsed, config) {
     if (!(this instanceof Message)) return new Message(parsed, config);
