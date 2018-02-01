@@ -169,9 +169,13 @@ module.exports = function(RED) {
     }
     RED.nodes.registerType('evohome-hgi-parser', EvohomeHGIParser);
 
-    function EvohomeDecoder(config) {
-        RED.nodes.createNode(this, config);
+    function EvohomeDecoder(n) {
+        RED.nodes.createNode(this, n);
         var node = this;
+
+        var configNode = RED.nodes.getNode(n.config);
+        node.config = JSON.parse(configNode.json);
+
         node.on('input', function(msg) {
             msg.payload.decoded = {};
 
@@ -187,4 +191,12 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType('evohome-decoder', EvohomeDecoder);
+
+    function EvohomeSiteConfiguration(n) {
+        RED.nodes.createNode(this, n);
+        var node = this;
+
+        node.json = n.json;
+    }
+    RED.nodes.registerType('evohome-site-configuration', EvohomeSiteConfiguration);
 }

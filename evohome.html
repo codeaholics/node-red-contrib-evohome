@@ -117,7 +117,8 @@
     RED.nodes.registerType('evohome-decoder', {
         category: 'Evohome',
         defaults: {
-            name: {value: ''}
+            name: {value: ''},
+            config: {type: 'evohome-site-configuration', required: true}
         },
         color:'#A6BBCF',
         inputs: 1,
@@ -136,5 +137,42 @@
     <div class='form-row'>
         <label for='node-input-name'><i class='fa fa-tag'></i> Name</label>
         <input type='text' id='node-input-name' placeholder='Name'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-config'><i class='fa fa-random'></i> Site configuration</label>
+        <input type='text' id='node-input-config'>
+    </div>
+</script>
+
+<script type='text/javascript'>
+    RED.nodes.registerType('evohome-site-configuration', {
+        category: 'config',
+        defaults: {
+            name: {value: ''},
+            json: {value: '', required: true, validate: RED.validators.typedInput('configType')},
+            configType: {value: 'json'}
+        },
+        label: function() {
+            return this.name || 'Site Config';
+        },
+        oneditprepare: function() {
+            $('#node-config-input-json').typedInput({
+                default: 'json',
+                typeField: $('#node-config-input-configType'),
+                types:['json']
+            });
+        }
+    });
+</script>
+
+<script type='text/x-red' data-template-name='evohome-site-configuration'>
+    <div class='form-row'>
+        <label for='node-config-input-name'><i class='fa fa-tag'></i> Name</label>
+        <input type='text' id='node-config-input-name' placeholder='Name'>
+    </div>
+    <div class='form-row'>
+        <label for='node-config-input-json'><i class='fa fa-envelope'></i> JSON</label>
+        <input type='text' id='node-config-input-json' style='width:70%'>
+        <input type='hidden' id='node-config-input-configType'>
     </div>
 </script>
