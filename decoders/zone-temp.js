@@ -5,4 +5,4 @@ module.exports = function(m) {
     return {
         type: 'ZONE_TEMP'
     };
-}
+};

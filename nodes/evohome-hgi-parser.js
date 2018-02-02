@@ -1,11 +1,11 @@
 module.exports = function(RED) {
     function EvohomeHGIParser(config) {
         RED.nodes.createNode(this, config);
-        var node = this;
-        node.on('input', function(msg) {
+        const node = this;
+        node.on('input', (msg) => {
             const fields = msg.payload.split(/\s+/);
-            if (fields.length != 9) {
-                node.warn('Failed to parse HGI80 format message: ' + msg.payload);
+            if (fields.length !== 9) {
+                node.warn(`Failed to parse HGI80 format message: ${msg.payload}`);
                 return;
             }
 
@@ -34,4 +34,4 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType('evohome-hgi-parser', EvohomeHGIParser);
-}
+};

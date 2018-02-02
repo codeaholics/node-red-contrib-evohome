@@ -1,28 +1,34 @@
 {
-  "name": "node-red-contrib-evohome",
-  "version": "0.0.1",
-  "description": "Evohome integration for NodeRED",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "NodeRED",
-    "node-red",
-    "Honeywell",
-    "Evohome",
-    "IoT"
-  ],
-  "author": "Danny Yates <danny@codeaholics.org>",
-  "license": "Private",
-  "node-red" : {
-    "nodes": {
-      "evohome-tcp-connection": "nodes/evohome-tcp-connection.js",
-      "evohome-site-configuration": "nodes/evohome-site-configuration.js",
-      "evohome-in": "nodes/evohome-in.js",
-      "evohome-out": "nodes/evohome-out.js",
-      "evohome-hgi-parser": "nodes/evohome-hgi-parser.js",
-      "evohome-decoder": "nodes/evohome-decoder.js"
+    "name": "node-red-contrib-evohome",
+    "version": "0.0.1",
+    "description": "Evohome integration for NodeRED",
+    "main": "index.js",
+    "scripts": {
+        "lint": "eslint .",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "pre-commit-header": "echo Running lint and tests. Please wait..."
+    },
+    "keywords": ["NodeRED", "node-red", "Honeywell", "Evohome", "IoT"],
+    "author": "Danny Yates <danny@codeaholics.org>",
+    "license": "Private",
+    "pre-commit": [
+        "pre-commit-header",
+        "lint"
+    ],
+    "node-red": {
+        "nodes": {
+            "evohome-tcp-connection": "nodes/evohome-tcp-connection.js",
+            "evohome-site-configuration": "nodes/evohome-site-configuration.js",
+            "evohome-in": "nodes/evohome-in.js",
+            "evohome-out": "nodes/evohome-out.js",
+            "evohome-hgi-parser": "nodes/evohome-hgi-parser.js",
+            "evohome-decoder": "nodes/evohome-decoder.js"
+        }
+    },
+    "devDependencies": {
+        "eslint": "^4.16.0",
+        "eslint-config-airbnb": "^16.1.0",
+        "eslint-plugin-import": "^2.8.0",
+        "pre-commit": "^1.2.2"
     }
-  }
 }

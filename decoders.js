@@ -1,97 +1,92 @@
-var batteryInfo = require('./decoders/battery-info');
-var zoneTemp = require('./decoders/zone-temp');
+const batteryInfo = require('./decoders/battery-info');
+const zoneTemp = require('./decoders/zone-temp');
 
-function externalSensor(m) {
+function externalSensor() {
     return {
         type: 'EXTERNAL_SENSOR'
     };
 }
 
-function zoneName(m) {
+function zoneName() {
     return {
         type: 'ZONE_NAME'
     };
 }
 
-function heatDemand(m) {
+function heatDemand() {
+    // This is used for two different commands
     return {
         type: 'HEAT_DEMAND'
     };
 }
 
-function zoneInfo(m) {
+function zoneInfo() {
     return {
         type: 'ZONE_INFO'
     };
 }
 
-function deviceInfo(m) {
+function deviceInfo() {
     return {
         type: 'DEVICE_INFO'
     };
 }
 
-function sysInfo(m) {
+function sysInfo() {
     return {
         type: 'SYS_INFO'
     };
 }
 
-function dhwTemp(m) {
+function dhwTemp() {
     return {
         type: 'DHW_TEMP'
     };
 }
 
-function zoneWindow(m) {
+function zoneWindow() {
     return {
         type: 'ZONE_WINDOW'
     };
 }
 
-function dhwState(m) {
+function dhwState() {
     return {
         type: 'DHW_STATE'
     };
 }
 
-function binding(m) {
+function binding() {
     return {
         type: 'BINDING'
     };
 }
 
-function setpoint(m) {
+function setpoint() {
     return {
         type: 'SETPOINT'
     };
 }
 
-function setpointOverride(m) {
+function setpointOverride() {
     return {
         type: 'SETPOINT_OVERRIDE'
     };
 }
 
-function controllerMode(m) {
+function controllerMode() {
     return {
         type: 'CONTROLLER_MODE'
     };
 }
 
-function heatDemand(m) {
-    return {
-        type: 'HEAT_DEMAND'
-    };
-}
-
-function actuatorCheck(m) {
+function actuatorCheck() {
     return {
         type: 'ACTUATOR_CHECK'
     };
 }
 
-function actuatorState(m) {
+function actuatorState() {
     return {
         type: 'ACTUATOR_STATE'
     };
@@ -116,4 +111,4 @@ module.exports = {
     '3150': heatDemand,
     '3B00': actuatorCheck,
     '3EF0': actuatorState
-}
+};

@@ -1,9 +1,9 @@
-var net = require('net');
+const net = require('net');
 
 module.exports = function(RED) {
     function EvohomeTCPConnection(n) {
         RED.nodes.createNode(this, n);
-        var node = this;
+        const node = this;
 
         node.host = n.host;
         node.port = n.port;
@@ -21,7 +21,7 @@ module.exports = function(RED) {
 
         disconnected();
 
-        node.ensureConnection = function() {
+        node.ensureConnection = () => {
             if (node.socket) return;
 
             node.log('connecting');
@@ -34,11 +34,11 @@ module.exports = function(RED) {
                 text: 'connecting'
             });
 
-            node.socket.on('error', function(err) {
+            node.socket.on('error', (err) => {
                 node.error(err);
             });
 
-            node.socket.on('connect', function() {
+            node.socket.on('connect', () => {
                 node.log('connected');
                 node.emit('status', {
                     fill: 'green',
@@ -47,24 +47,24 @@ module.exports = function(RED) {
                 });
             });
 
-            node.socket.on('data', function(buf) {
+            node.socket.on('data', (buf) => {
                 node.buffer += buf.toString();
-                var lines = node.buffer.split(/\n/);
+                const lines = node.buffer.split(/\n/);
                 node.buffer = lines.pop();
-                lines.forEach(function(line) {
+                lines.forEach((line) => {
                     node.emit('evohome-msg', line);
                 });
             });
 
-            node.socket.on('end', function() {
+            node.socket.on('end', () => {
                 if (node.buffer.length > 0) {
-                    var line = buffer;
-                    buffer = '';
+                    const line = node.buffer;
+                    node.buffer = '';
                     node.emit('evohome-msg', line);
                 }
             });
 
-            node.socket.on('close', function() {
+            node.socket.on('close', () => {
                 if (!node.socket) return;
 
                 node.log('closed');
@@ -77,14 +77,14 @@ module.exports = function(RED) {
                     node.reconnectTimeout = setTimeout(node.ensureConnection, 5000);
                 }
             });
-        }
+        };
 
-        node.send = function(line) {
+        node.send = (line) => {
             node.ensureConnection();
-            node.socket.write(line + '\n', 'binary');
-        }
+            node.socket.write(`${line}\n`, 'binary');
+        };
 
-        node.on('close', function() {
+        node.on('close', () => {
             node.log('closing');
             node.closing = true;
             clearTimeout(node.reconnectTimeout);
@@ -98,4 +98,4 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType('evohome-tcp-connection', EvohomeTCPConnection);
-}
+};

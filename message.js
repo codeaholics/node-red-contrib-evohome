@@ -1,11 +1,34 @@
-var ADDR_TYPE_CONTROLLER = 1;
-var ADDR_TYPE_ZONE = 4;
-var ADDR_TYPE_SENSOR = 7;
-var ADDR_TYPE_OPENTHERM = 10;
-var ADDR_TYPE_RELAY = 13;
-var ADDR_TYPE_GATEWAY = 18;
-var ADDR_TYPE_REMOTE = 30;
+const ADDR_TYPE_CONTROLLER = 1;
+const ADDR_TYPE_ZONE = 4;
+const ADDR_TYPE_SENSOR = 7;
+const ADDR_TYPE_OPENTHERM = 10;
+const ADDR_TYPE_RELAY = 13;
+const ADDR_TYPE_GATEWAY = 18;
+const ADDR_TYPE_REMOTE = 30;
 // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/3
+
+function Address(addr, controllers) {
+    if (!(this instanceof Address)) return new Address(addr);
+    this.addr = addr;
+    this.controllers = controllers;
+    this.type = +(this.addr.substr(0, 2));
+}
+
+Address.prototype.toString = function() {
+    return this.addr;
+};
+
+Address.prototype.isSiteController = function() {
+    return this.isController() && this.controllers.includes(this.addr);
+};
+
+Address.prototype.isController = function() { return this.type === ADDR_TYPE_CONTROLLER; };
+Address.prototype.isZone = function() { return this.type === ADDR_TYPE_ZONE; };
+Address.prototype.isSensor = function() { return this.type === ADDR_TYPE_SENSOR; };
+Address.prototype.isOpenTherm = function() { return this.type === ADDR_TYPE_OPENTHERM; };
+Address.prototype.isRelay = function() { return this.type === ADDR_TYPE_RELAY; };
+Address.prototype.isGateway = function() { return this.type === ADDR_TYPE_GATEWAY; };
+Address.prototype.isRemote = function() { return this.type === ADDR_TYPE_REMOTE; };
 
 function Message(parsed, config) {
     if (!(this instanceof Message)) return new Message(parsed, config);
@@ -29,32 +52,9 @@ Object.defineProperty(Message.prototype, 'addr', {
 });
 
 Message.prototype.getUInt8 = function() {
-    var result = this.parsed.payload.bytes.readUInt8(this.p);
+    const result = this.parsed.payload.bytes.readUInt8(this.p);
     this.p += 1;
     return result;
-}
-
-function Address(addr, controllers) {
-    if (!(this instanceof Address)) return new Address(addr);
-    this.addr = addr;
-    this.controllers = controllers;
-    this.type = +(this.addr.substr(0, 2));
-}
-
-Address.prototype.toString = function() {
-    return this.addr;
-}
-
-Address.prototype.isSiteController = function() {
-    return this.isController() && this.controllers.includes(this.addr);
-}
-
-Address.prototype.isController = function() { return this.type === ADDR_TYPE_CONTROLLER; }
-Address.prototype.isZone = function() { return this.type === ADDR_TYPE_ZONE; }
-Address.prototype.isSensor = function() { return this.type === ADDR_TYPE_SENSOR; }
-Address.prototype.isOpenTherm = function() { return this.type === ADDR_TYPE_OPENTHERM; }
-Address.prototype.isRelay = function() { return this.type === ADDR_TYPE_RELAY; }
-Address.prototype.isGateway = function() { return this.type === ADDR_TYPE_GATEWAY; }
-Address.prototype.isRemote = function() { return this.type === ADDR_TYPE_REMOTE; }
+};
 
 module.exports = Message;
