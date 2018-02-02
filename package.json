@@ -17,12 +17,12 @@
     ],
     "node-red": {
         "nodes": {
-            "evohome-tcp-connection": "nodes/evohome-tcp-connection.js",
-            "evohome-site-configuration": "nodes/evohome-site-configuration.js",
-            "evohome-in": "nodes/evohome-in.js",
-            "evohome-out": "nodes/evohome-out.js",
-            "evohome-hgi-parser": "nodes/evohome-hgi-parser.js",
-            "evohome-decoder": "nodes/evohome-decoder.js"
+            "evohome-tcp-connection": "src/nodes/evohome-tcp-connection.js",
+            "evohome-site-configuration": "src/nodes/evohome-site-configuration.js",
+            "evohome-in": "src/nodes/evohome-in.js",
+            "evohome-out": "src/nodes/evohome-out.js",
+            "evohome-hgi-parser": "src/nodes/evohome-hgi-parser.js",
+            "evohome-decoder": "src/nodes/evohome-decoder.js"
         }
     },
     "devDependencies": {
