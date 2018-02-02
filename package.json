@@ -17,7 +17,12 @@
   "license": "Private",
   "node-red" : {
     "nodes": {
-      "evohome": "evohome.js"
+      "evohome-tcp-connection": "nodes/evohome-tcp-connection.js",
+      "evohome-site-configuration": "nodes/evohome-site-configuration.js",
+      "evohome-in": "nodes/evohome-in.js",
+      "evohome-out": "nodes/evohome-out.js",
+      "evohome-hgi-parser": "nodes/evohome-hgi-parser.js",
+      "evohome-decoder": "nodes/evohome-decoder.js"
     }
   }
 }
