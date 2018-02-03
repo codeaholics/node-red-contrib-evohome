@@ -27,10 +27,7 @@ module.exports = function(RED) {
                     ],
                     cmd: fields[6],
                     len: +fields[7],
-                    payload: {
-                        raw: fields[8],
-                        bytes: Buffer.from(fields[8], 'hex')
-                    }
+                    payload: fields[8]
                 }
             };
             node.send(msg);

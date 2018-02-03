@@ -35,6 +35,8 @@ function Message(parsed, config) {
 
     this.parsed = parsed;
     this.config = config;
+
+    this.bytes = Buffer.from(this.parsed.payload, 'hex');
     this.addrs = Object.freeze([
         new Address(this.parsed.addr[0], this.config.controllers),
         new Address(this.parsed.addr[1], this.config.controllers),
@@ -52,7 +54,7 @@ Object.defineProperty(Message.prototype, 'addr', {
 });
 
 Message.prototype.getUInt8 = function() {
-    const result = this.parsed.payload.bytes.readUInt8(this.p);
+    const result = this.bytes.readUInt8(this.p);
     this.p += 1;
     return result;
 };
