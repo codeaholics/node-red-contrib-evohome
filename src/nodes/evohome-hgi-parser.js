@@ -8,7 +8,11 @@ module.exports = function(RED) {
 
             const fields = msg.payload.split(/\s+/);
             if (fields.length !== 9) {
-                node.warn(`Failed to parse HGI80 format message: ${msg.payload}`);
+                msg.payload = {
+                    error: 'Failed to parse HGI80 format message: incorrect number of fields',
+                    original: msg.payload
+                };
+                node.send([null, msg]);
                 return;
             }
 
@@ -30,7 +34,7 @@ module.exports = function(RED) {
                     payload: fields[8]
                 }
             };
-            node.send(msg);
+            node.send([msg, null]);
         });
     }
     RED.nodes.registerType('evohome-hgi-parser', EvohomeHGIParser);
