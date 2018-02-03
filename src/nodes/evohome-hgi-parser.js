@@ -21,28 +21,46 @@ module.exports = function(RED) {
                 return;
             }
 
-            const fields = msg.payload.split(/\s+/);
+            const fields = msg.payload.split(/\s+/).map(s => s.toUpperCase());
             if (fields.length !== 9) {
                 err('Failed to parse HGI80 format message: incorrect number of fields');
                 return;
             }
 
-            // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/1
+            const [unk0, type, unk1, addr0, addr1, addr2, cmd, len, payload] = fields;
+
+            function ensure(b, e) {
+                if (!b) throw new Error(e);
+            }
+
+            try {
+                ensure(type.match(/^(I|W|RQ|RP)$/), 'unknown message type');
+                ensure(addr0.match(/^(\d\d:\d{6}|--:------)$/), 'address 0 incorrect format');
+                ensure(addr1.match(/^(\d\d:\d{6}|--:------)$/), 'address 1 incorrect format');
+                ensure(addr2.match(/^(\d\d:\d{6}|--:------)$/), 'address 2 incorrect format');
+                ensure(cmd.match(/^[0-9A-F]{4}$/), 'unrecognised command format');
+                ensure(len.match(/^\d{3}$/), 'badly formatted length');
+                ensure(payload.match(/^[0-9A-F]*$/), 'badly formatted payload');
+                ensure(payload.length === (len * 2), 'payload length does not match declared length');
+            } catch (e) {
+                err(`Failed to parse HGI80 format message: ${e.message}`);
+                return;
+            }
 
             msg.payload = {
                 original: msg.payload,
                 parsed: {
-                    unk0: fields[0],
-                    type: fields[1],
-                    unk1: fields[2],
+                    unk0,
+                    type,
+                    unk1,
                     addr: [
-                        fields[3],
-                        fields[4],
-                        fields[5]
+                        addr0,
+                        addr1,
+                        addr2
                     ],
-                    cmd: fields[6],
-                    len: +fields[7],
-                    payload: fields[8]
+                    cmd,
+                    len: +len,
+                    payload
                 }
             };
             node.send([msg, null]);
