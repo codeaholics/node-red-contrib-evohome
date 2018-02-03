@@ -3,16 +3,27 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         const node = this;
         node.on('input', (msg) => {
-            // For the time being, ignore messages with *ERR in them as there are quite a lot of them
-            if (msg.payload.indexOf('*ERR') !== -1) return;
-
-            const fields = msg.payload.split(/\s+/);
-            if (fields.length !== 9) {
+            function err(errorText) {
                 msg.payload = {
-                    error: 'Failed to parse HGI80 format message: incorrect number of fields',
+                    error: errorText,
                     original: msg.payload
                 };
                 node.send([null, msg]);
+            }
+
+            // codeaholics firmware uses tab char as error indicator. Reading the
+            // Domoticz code suggests a genuine HGI80 might use 0x11, but it's not
+            // immediately clear. Need an HGI80 to play with. Unfortunately,
+            // Domoticz squashes any messages with 0x11, so other HGI80 users may
+            // not be able to help with logs to investigate further.
+            if (msg.payload.indexOf('\t') !== -1) {
+                err('Failed to parse HGI80 format message: malformed message');
+                return;
+            }
+
+            const fields = msg.payload.split(/\s+/);
+            if (fields.length !== 9) {
+                err('Failed to parse HGI80 format message: incorrect number of fields');
                 return;
             }
 
