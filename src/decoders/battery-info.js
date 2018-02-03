@@ -20,7 +20,7 @@ module.exports = function(m) {
 
     return {
         type: 'BATTERY_INFO',
-        sender: m.addr[0].toString(),
+        device: m.addr[0].describe(),
         zone,
         batteryLevel: battery
     };

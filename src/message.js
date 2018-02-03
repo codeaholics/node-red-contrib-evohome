@@ -7,6 +7,16 @@ const ADDR_TYPE_GATEWAY = 18;
 const ADDR_TYPE_REMOTE = 30;
 // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/3
 
+const TYPE_NAMES = [];
+
+TYPE_NAMES[ADDR_TYPE_CONTROLLER] = 'controller';
+TYPE_NAMES[ADDR_TYPE_ZONE] = 'zone';
+TYPE_NAMES[ADDR_TYPE_SENSOR] = 'sensor';
+TYPE_NAMES[ADDR_TYPE_OPENTHERM] = 'opentherm';
+TYPE_NAMES[ADDR_TYPE_RELAY] = 'relay';
+TYPE_NAMES[ADDR_TYPE_GATEWAY] = 'gateway';
+TYPE_NAMES[ADDR_TYPE_REMOTE] = 'remote';
+
 function Address(addr, controllers) {
     if (!(this instanceof Address)) return new Address(addr);
     this.addr = addr;
@@ -16,6 +26,13 @@ function Address(addr, controllers) {
 
 Address.prototype.toString = function() {
     return this.addr;
+};
+
+Address.prototype.describe = function() {
+    return {
+        addr: this.addr,
+        type: TYPE_NAMES[this.type]
+    };
 };
 
 Address.prototype.isSiteController = function() {
