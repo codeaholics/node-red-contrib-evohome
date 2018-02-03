@@ -17,10 +17,10 @@ const TYPE_NAMES = {
     [ADDR_TYPE_REMOTE]: 'remote'
 };
 
-function Address(addr, controllers) {
+function Address(addr, config) {
     if (!(this instanceof Address)) return new Address(addr);
     this.addr = addr;
-    this.controllers = controllers;
+    this.config = config;
     this.type = this.addr.substr(0, 2);
 }
 
@@ -31,12 +31,15 @@ Address.prototype.toString = function() {
 Address.prototype.describe = function() {
     return {
         addr: this.addr,
-        type: TYPE_NAMES[this.type]
+        type: TYPE_NAMES[this.type],
+        name: this.config.devices[this.addr].name,
+        zone: this.config.devices[this.addr].zone,
+        zoneName: this.config.zones[this.config.devices[this.addr].zone]
     };
 };
 
 Address.prototype.isSiteController = function() {
-    return this.isController() && this.controllers.includes(this.addr);
+    return this.isController() && this.config.controllers.includes(this.addr);
 };
 
 Address.prototype.isController = function() { return this.type === ADDR_TYPE_CONTROLLER; };
@@ -55,9 +58,9 @@ function Message(parsed, config) {
 
     this.bytes = Buffer.from(this.parsed.payload, 'hex');
     this.addrs = Object.freeze([
-        new Address(this.parsed.addr[0], this.config.controllers),
-        new Address(this.parsed.addr[1], this.config.controllers),
-        new Address(this.parsed.addr[2], this.config.controllers)
+        new Address(this.parsed.addr[0], this.config),
+        new Address(this.parsed.addr[1], this.config),
+        new Address(this.parsed.addr[2], this.config)
     ]);
     this.p = 0;
 }
