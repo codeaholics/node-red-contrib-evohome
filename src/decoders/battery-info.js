@@ -5,7 +5,7 @@ module.exports = function(m) {
 
     if (m.length !== 3) { throw new Error('BATTERY_INFO payload length incorrect'); }
 
-    const zone = m.getUInt8() + 1;
+    m.skip(1);  // This is the zone on some messages, but not all. Just use the config for zone numbers.
     let battery = m.getUInt8();
     const batteryOK = m.getUInt8();
 
@@ -21,7 +21,6 @@ module.exports = function(m) {
     return {
         type: 'BATTERY_INFO',
         device: m.addr[0].describe(),
-        zone,
         batteryLevel: battery
     };
 };

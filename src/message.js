@@ -23,6 +23,10 @@ Object.defineProperty(Message.prototype, 'addr', {
     get() { return this.addrs; }
 });
 
+Message.prototype.skip = function(c) {
+    this.p += c;
+};
+
 Message.prototype.getUInt8 = function() {
     const result = this.bytes.readUInt8(this.p);
     this.p += 1;
