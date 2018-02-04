@@ -11,6 +11,8 @@
         no-multiple-empty-lines: [2, {max: 1, maxEOF: 0, maxBOF: 0}],
         no-multi-spaces: [2, {ignoreEOLComments: true}],
         quote-props: [2, consistent],
-        func-names: 0
+        func-names: 0,
+        no-plusplus: [2, {allowForLoopAfterthoughts: true}],
+        no-cond-assign: [2, except-parens]
     }
 }
