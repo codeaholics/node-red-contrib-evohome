@@ -1,5 +1,5 @@
-const batteryInfo = require('./decoders/battery-info');
-const zoneTemp = require('./decoders/zone-temp');
+const batteryInfo = require('./battery-info');
+const zoneTemp = require('./zone-temp');
 
 function externalSensor() {
     return {

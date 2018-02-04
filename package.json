@@ -23,7 +23,8 @@
             "evohome-out": "src/nodes/evohome-out.js",
             "evohome-hgi-parser": "src/nodes/evohome-hgi-parser.js",
             "evohome-decoder": "src/nodes/evohome-decoder.js",
-            "evohome-config-finder": "src/nodes/evohome-config-finder.js"
+            "evohome-config-finder": "src/nodes/evohome-config-finder.js",
+            "evohome-influxdb-formatter": "src/nodes/evohome-influxdb-formatter.js"
         }
     },
     "devDependencies": {
