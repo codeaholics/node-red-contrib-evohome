@@ -29,19 +29,27 @@ Address.prototype.toString = function() {
 };
 
 Address.prototype.describe = function() {
-    const device = this.config.devices[this.addr];
-    const type = TYPE_NAMES[this.type] || 'unknown';
-    const name = (device && device.name) || 'unknown';
-    const zone = (device && device.zone) || -1;
-    const zoneName = (device && device.zone && this.config.zones[device.zone]) || 'unknown';
-
-    return {
-        addr: this.addr,
-        type,
-        name,
-        zone,
-        zoneName
+    const result = {
+        addr: this.addr
     };
+
+    const type = TYPE_NAMES[this.type];
+    if (type) result.type = type;
+
+    const device = this.config.devices[this.addr];
+    if (device) {
+        if (device.name) result.name = device.name;
+        if (device.zone !== undefined) {
+            result.zone = device.zone;
+
+            const zoneName = this.config.zones[device.zone];
+            if (zoneName) {
+                result.zoneName = zoneName;
+            }
+        }
+    }
+
+    return result;
 };
 
 Address.prototype.isConfigured = function() {
