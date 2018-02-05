@@ -1,8 +1,7 @@
 module.exports = function(d) {
     return {
-        measurement: 'battery-info',
+        measurement: 'BatteryInfo',
         tags: {
-            type: d.type,
             device: d.device.addr,
             deviceType: d.device.type,
             deviceName: d.device.name,
