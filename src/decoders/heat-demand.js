@@ -1,7 +1,7 @@
 const SUBSYSTEMS = {
-    250: 'ch',
-    251: 'dhw',
-    253: 'boiler'
+    249: 'ch',
+    250: 'dhw',
+    252: 'boiler'
 };
 
 module.exports = function(m) {
@@ -10,10 +10,10 @@ module.exports = function(m) {
 
     if (m.length !== 2) { throw new Error('HEAT_DEMAND payload length incorrect'); }
 
-    const zone = m.getUInt8() + 1;
+    const zone = m.getUInt8();
     const demand = m.getUInt8() / 2;
 
-    const subsystem = zone <= 12 ? 'zone' : SUBSYSTEMS[zone] || `unknown ${zone}`;
+    const subsystem = zone < 12 ? 'zone' : SUBSYSTEMS[zone] || `unknown ${zone}`;
 
     // Domoticz does a "RequestDHWState" in here somewhere. Do we need it?
 
