@@ -18,7 +18,8 @@ module.exports = function(RED) {
             } else {
                 const formatted = formatter(msg.payload.decoded);
                 if (formatted) {
-                    msg.payload = formatted;
+                    msg.measurement = formatted.measurement;
+                    msg.payload = [formatted.values, formatted.tags];
                     node.send([msg, null]);
                 }
             }
