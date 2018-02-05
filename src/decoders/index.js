@@ -1,5 +1,6 @@
 const batteryInfo = require('./battery-info');
 const zoneTemp = require('./zone-temp');
+const heatDemand = require('./heat-demand');
 
 function externalSensor() {
     return {
@@ -13,15 +14,6 @@ function zoneName() {
     return {
         decoded: {
             type: 'ZONE_NAME'
-        }
-    };
-}
-
-function heatDemand() {
-    // This is used for two different commands
-    return {
-        decoded: {
-            type: 'HEAT_DEMAND'
         }
     };
 }
