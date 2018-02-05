@@ -1,15 +1,23 @@
 module.exports = function(d) {
-    return {
+    const result = {
         measurement: 'BatteryInfo',
         tags: {
-            device: d.device.addr || '',
-            deviceType: d.device.type || '',
-            deviceName: d.device.name || '',
-            zone: d.device.zone || '',
-            zoneName: d.device.zoneName || ''
         },
         values: {
             batteryLevel: d.batteryLevel
         }
     };
+
+    function putTag(tag, value) {
+        if (value === null || value === undefined) return;
+        result.tags[tag] = value;
+    }
+
+    putTag('device', d.device.addr);
+    putTag('deviceType', d.device.type);
+    putTag('deviceName', d.device.name);
+    putTag('zone', d.device.zone);
+    putTag('zoneName', d.device.zoneName);
+
+    return result;
 };
