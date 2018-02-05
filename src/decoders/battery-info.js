@@ -19,8 +19,15 @@ module.exports = function(m) {
     }
 
     return {
-        type: 'BATTERY_INFO',
-        device: m.addr[0].describe(),
-        batteryLevel: battery
+        deduplication: {
+            key: `BATTERY_INFO;${m.addr[0].toString()}`,
+            value: battery,
+            seconds: 3600
+        },
+        decoded: {
+            type: 'BATTERY_INFO',
+            device: m.addr[0].describe(),
+            batteryLevel: battery
+        }
     };
 };

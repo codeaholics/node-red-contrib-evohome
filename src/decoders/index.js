@@ -3,92 +3,122 @@ const zoneTemp = require('./zone-temp');
 
 function externalSensor() {
     return {
-        type: 'EXTERNAL_SENSOR'
+        decoded: {
+            type: 'EXTERNAL_SENSOR'
+        }
     };
 }
 
 function zoneName() {
     return {
-        type: 'ZONE_NAME'
+        decoded: {
+            type: 'ZONE_NAME'
+        }
     };
 }
 
 function heatDemand() {
     // This is used for two different commands
     return {
-        type: 'HEAT_DEMAND'
+        decoded: {
+            type: 'HEAT_DEMAND'
+        }
     };
 }
 
 function zoneInfo() {
     return {
-        type: 'ZONE_INFO'
+        decoded: {
+            type: 'ZONE_INFO'
+        }
     };
 }
 
 function deviceInfo() {
     return {
-        type: 'DEVICE_INFO'
+        decoded: {
+            type: 'DEVICE_INFO'
+        }
     };
 }
 
 function sysInfo() {
     return {
-        type: 'SYS_INFO'
+        decoded: {
+            type: 'SYS_INFO'
+        }
     };
 }
 
 function dhwTemp() {
     return {
-        type: 'DHW_TEMP'
+        decoded: {
+            type: 'DHW_TEMP'
+        }
     };
 }
 
 function zoneWindow() {
     return {
-        type: 'ZONE_WINDOW'
+        decoded: {
+            type: 'ZONE_WINDOW'
+        }
     };
 }
 
 function dhwState() {
     return {
-        type: 'DHW_STATE'
+        decoded: {
+            type: 'DHW_STATE'
+        }
     };
 }
 
 function binding() {
     return {
-        type: 'BINDING'
+        decoded: {
+            type: 'BINDING'
+        }
     };
 }
 
 function setpoint() {
     return {
-        type: 'SETPOINT'
+        decoded: {
+            type: 'SETPOINT'
+        }
     };
 }
 
 function setpointOverride() {
     return {
-        type: 'SETPOINT_OVERRIDE'
+        decoded: {
+            type: 'SETPOINT_OVERRIDE'
+        }
     };
 }
 
 function controllerMode() {
     return {
-        type: 'CONTROLLER_MODE'
+        decoded: {
+            type: 'CONTROLLER_MODE'
+        }
     };
 }
 
 function actuatorCheck() {
     return {
-        type: 'ACTUATOR_CHECK'
+        decoded: {
+            type: 'ACTUATOR_CHECK'
+        }
     };
 }
 
 function actuatorState() {
     return {
-        type: 'ACTUATOR_STATE'
+        decoded: {
+            type: 'ACTUATOR_STATE'
+        }
     };
 }
 

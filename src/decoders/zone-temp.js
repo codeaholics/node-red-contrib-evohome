@@ -3,6 +3,8 @@ module.exports = function(m) {
     if ((m.length % 3) !== 0) { throw new Error('ZONE_TEMP payload invalid length'); }
 
     return {
-        type: 'ZONE_TEMP'
+        decoded: {
+            type: 'ZONE_TEMP'
+        }
     };
 };
