@@ -26,12 +26,7 @@ module.exports = function(m) {
 
     // Domoticz does a "RequestDHWState" in here somewhere. Do we need it?
 
-    return {
-        // deduplication: {
-        //     key: `HEAT_DEMAND;${m.addr[0].toString()};${subsystem}`,  // Include subsystem because the controller sends messages for all BDRs
-        //     value: demand,
-        //     seconds: 3600
-        // },
+    const result = {
         decoded: {
             type: 'HEAT_DEMAND',
             device: m.addr[0].describe(),
@@ -39,4 +34,14 @@ module.exports = function(m) {
             demand
         }
     };
+
+    if (subsystem === 'zone') {
+        result.deduplication = {
+            key: `HEAT_DEMAND;${m.addr[0].toString()}`,
+            value: demand,
+            seconds: 120
+        };
+    }
+
+    return result;
 };
