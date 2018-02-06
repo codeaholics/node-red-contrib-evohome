@@ -13,7 +13,16 @@ module.exports = function(m) {
     const zone = m.getUInt8();
     const demand = m.getUInt8() / 2;
 
-    const subsystem = zone < 12 ? 'zone' : SUBSYSTEMS[zone] || `unknown ${zone}`;
+    let subsystem;
+    if (zone < 12) {
+        subsystem = 'zone';
+    } else if (zone in SUBSYSTEMS) {
+        subsystem = SUBSYSTEMS[zone];
+    } else {
+        subsystem = `unknown ${zone}`;
+    }
+
+    if (subsystem === 'boiler' && m.addr[0].isOpenTherm()) subsystem = 'opentherm';
 
     // Domoticz does a "RequestDHWState" in here somewhere. Do we need it?
 
