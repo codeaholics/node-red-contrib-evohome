@@ -5,9 +5,6 @@ const SUBSYSTEMS = {
 };
 
 module.exports = function(m) {
-    // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/2
-    if (!m.addr[0].isSiteController() && !m.addr[2].isSiteController()) { return null; }
-
     if (m.length !== 2) { throw new Error('HEAT_DEMAND payload length incorrect'); }
 
     const zone = m.getUInt8();

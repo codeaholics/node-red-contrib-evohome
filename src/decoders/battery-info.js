@@ -1,6 +1,5 @@
 module.exports = function(m) {
     // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/2
-
     if (!m.addr[0].isSensor() && !m.addr[2].isSiteController()) { return null; }
 
     if (m.length !== 3) { throw new Error('BATTERY_INFO payload length incorrect'); }

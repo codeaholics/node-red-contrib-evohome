@@ -1,6 +1,4 @@
 module.exports = function(m, config) {
-    if (m.addr[0].isController() && !m.addr[0].isSiteController()) { return null; }
-
     if (m.length < 3) { throw new Error('ZONE_TEMP payload too short'); }
     if ((m.length % 3) !== 0) { throw new Error('ZONE_TEMP payload invalid length'); }
 

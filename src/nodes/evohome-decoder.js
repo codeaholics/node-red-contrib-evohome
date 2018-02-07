@@ -22,6 +22,8 @@ module.exports = function(RED) {
             } else {
                 try {
                     const m = new Message(msg.payload.parsed, node.config);
+                    if (m.incorrectSite()) return;
+
                     const results = [].concat(decoder(m, node.config));
                     results.forEach((result) => {
                         if (!result) return;

@@ -23,6 +23,10 @@ Object.defineProperty(Message.prototype, 'addr', {
     get() { return this.addrs; }
 });
 
+Message.prototype.incorrectSite = function() {
+    return this.addrs.reduce((acc, it) => acc || (it.isController() && !it.isSiteController()), false);
+};
+
 Message.prototype.isEOF = function() {
     return this.p >= this.parsed.len;
 };
