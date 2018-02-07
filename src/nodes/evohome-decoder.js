@@ -22,7 +22,7 @@ module.exports = function(RED) {
             } else {
                 try {
                     const m = new Message(msg.payload.parsed, node.config);
-                    const results = [].concat(decoder(m));
+                    const results = [].concat(decoder(m, node.config));
                     results.forEach((result) => {
                         if (!result) return;
 

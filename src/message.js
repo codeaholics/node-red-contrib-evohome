@@ -23,6 +23,10 @@ Object.defineProperty(Message.prototype, 'addr', {
     get() { return this.addrs; }
 });
 
+Message.prototype.isEOF = function() {
+    return this.p >= this.parsed.len;
+};
+
 Message.prototype.skip = function(c) {
     this.p += c;
 };
@@ -30,6 +34,12 @@ Message.prototype.skip = function(c) {
 Message.prototype.getUInt8 = function() {
     const result = this.bytes.readUInt8(this.p);
     this.p += 1;
+    return result;
+};
+
+Message.prototype.getUInt16 = function() {
+    const result = this.bytes.readUInt16BE(this.p);
+    this.p += 2;
     return result;
 };
 
