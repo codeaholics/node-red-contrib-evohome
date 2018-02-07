@@ -1,6 +1,7 @@
 const batteryInfo = require('./battery-info');
 const zoneTemp = require('./zone-temp');
 const heatDemand = require('./heat-demand');
+const setpoint = require('./setpoint');
 
 function externalSensor() {
     return {
@@ -70,14 +71,6 @@ function binding() {
     return {
         decoded: {
             type: 'BINDING'
-        }
-    };
-}
-
-function setpoint() {
-    return {
-        decoded: {
-            type: 'SETPOINT'
         }
     };
 }
