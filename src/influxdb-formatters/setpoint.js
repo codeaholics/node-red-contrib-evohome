@@ -4,7 +4,7 @@ module.exports = function(d) {
         tags: {
         },
         values: {
-            temperature: d.temperature
+            setpoint: d.setpoint
         }
     };
 

@@ -23,9 +23,9 @@ module.exports = function(m, config) {
             result.decoded.zoneName = result.decoded.device.zoneName;
         }
 
-        const temperature = m.getUInt16();
-        if (temperature !== 0x7FFF) {
-            result.decoded.temperature = temperature / 100;
+        const setpoint = m.getUInt16();
+        if (setpoint !== 0x7FFF) {
+            result.decoded.setpoint = setpoint / 100;
             results.push(result);
         }
     }
