@@ -4,7 +4,9 @@ const ADDR_TYPE_SENSOR = '07';
 const ADDR_TYPE_OPENTHERM = '10';
 const ADDR_TYPE_RELAY = '13';
 const ADDR_TYPE_GATEWAY = '18';
+const ADDR_TYPE_DTS92_THERMOSTAT = '22';
 const ADDR_TYPE_REMOTE = '30';
+const ADDR_TYPE_T87RF_THERMOSTAT = '34';
 // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/3
 
 const TYPE_NAMES = {
@@ -14,7 +16,9 @@ const TYPE_NAMES = {
     [ADDR_TYPE_OPENTHERM]: 'opentherm',
     [ADDR_TYPE_RELAY]: 'relay',
     [ADDR_TYPE_GATEWAY]: 'gateway',
-    [ADDR_TYPE_REMOTE]: 'remote'
+    [ADDR_TYPE_DTS92_THERMOSTAT]: 'thermostat',
+    [ADDR_TYPE_REMOTE]: 'remote',
+    [ADDR_TYPE_T87RF_THERMOSTAT]: 'thermostat'
 };
 
 function Address(addr, config) {
@@ -67,5 +71,8 @@ Address.prototype.isOpenTherm = function() { return this.type === ADDR_TYPE_OPEN
 Address.prototype.isRelay = function() { return this.type === ADDR_TYPE_RELAY; };
 Address.prototype.isGateway = function() { return this.type === ADDR_TYPE_GATEWAY; };
 Address.prototype.isRemote = function() { return this.type === ADDR_TYPE_REMOTE; };
+Address.prototype.isThermostat = function() {
+    return this.type === ADDR_TYPE_T87RF_THERMOSTAT || this.type === ADDR_TYPE_DTS92_THERMOSTAT;
+};
 
 module.exports = Address;
