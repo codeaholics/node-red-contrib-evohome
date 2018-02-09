@@ -23,6 +23,11 @@ Object.defineProperty(Message.prototype, 'addr', {
     get() { return this.addrs; }
 });
 
+Message.prototype.isInformation = function() { return this.parsed.type === 'I'; };
+Message.prototype.isRequest = function() { return this.parsed.type === 'RQ'; };
+Message.prototype.isReply = function() { return this.parsed.type === 'RP'; };
+Message.prototype.isWrite = function() { return this.parsed.type === 'W'; };
+
 Message.prototype.incorrectSite = function() {
     return this.addrs.reduce((acc, it) => acc || (it.isController() && !it.isSiteController()), false);
 };

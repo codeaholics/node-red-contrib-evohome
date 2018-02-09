@@ -1,4 +1,5 @@
 module.exports = function(m, config) {
+    if (m.isRequest() && m.length === 1) { return null; }
     if (m.length < 3) { throw new Error('SETPOINT payload too short'); }
     if ((m.length % 3) !== 0) { throw new Error('SETPOINT payload invalid length'); }
 
