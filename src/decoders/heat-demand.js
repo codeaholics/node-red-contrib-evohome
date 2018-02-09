@@ -19,10 +19,6 @@ module.exports = function(m) {
         subsystem = `unknown ${zone}`;
     }
 
-    if (subsystem === 'boiler' && m.addr[0].isOpenTherm()) subsystem = 'opentherm';
-
-    // Domoticz does a "RequestDHWState" in here somewhere. Do we need it?
-
     const result = {
         decoded: {
             type: 'HEAT_DEMAND',
