@@ -4,7 +4,9 @@ module.exports = function(options) {
         if (m.length < 3) { throw new Error(`${options.type} payload too short`); }
         if ((m.length % 3) !== 0) { throw new Error(`${options.type} payload invalid length`); }
 
-        if (!m.addr[0].isController() && m.length !== 3) { throw new Error(`${options.type} incorrect payload length`); }
+        if (!m.addr[0].isController() && m.length !== 3) {
+            throw new Error(`${options.type} incorrect payload length`);
+        }
 
         const results = [];
 
