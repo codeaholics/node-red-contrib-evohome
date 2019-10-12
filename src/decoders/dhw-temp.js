@@ -1,10 +1,10 @@
 module.exports = function(m) {
-    if (!m.isReply() || m.length !== 3) { return null; }
+    if (!m.addr[0].isSensor() || !m.isInformation() || m.length !== 3) { return null; }
 
     const result = {
         decoded: {
             type: 'DHW_TEMP',
-            device: m.addr[1].describe()
+            device: m.addr[0].describe()
         }
     };
 
@@ -18,7 +18,7 @@ module.exports = function(m) {
     }
 
     result.deduplication = {
-        key: `DHW_TEMP;${m.addr[1].toString()}`,
+        key: `DHW_TEMP;${m.addr[0].toString()}`,
         value: result.decoded.temperature,
         seconds: 3600
     };
