@@ -20,7 +20,7 @@ module.exports = function(options) {
 
             if (m.addr[0].isController()) {
                 result.decoded.zone = m.getUInt8() + 1;
-                result.decoded.zoneName = config.zones[result.decoded.zone];
+                result.decoded.zoneName = config.findZoneName(m.addr[0], result.decoded.zone);
             } else {
                 m.skip(1);
                 result.decoded.zone = result.decoded.device.zone;

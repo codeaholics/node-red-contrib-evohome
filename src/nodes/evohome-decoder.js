@@ -1,5 +1,6 @@
 const decoders = require('../decoders');
 const Message = require('../message');
+const Config = require('../config');
 
 module.exports = function(RED) {
     function EvohomeDecoder(n) {
@@ -7,7 +8,7 @@ module.exports = function(RED) {
         const node = this;
 
         const configNode = RED.nodes.getNode(n.config);
-        node.config = JSON.parse(configNode.json);
+        node.config = new Config(JSON.parse(configNode.json));
 
         node.on('input', (msg) => {
             const now = Date.now();

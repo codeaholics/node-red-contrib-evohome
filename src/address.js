@@ -22,7 +22,8 @@ const TYPE_NAMES = {
 };
 
 function Address(addr, config) {
-    if (!(this instanceof Address)) return new Address(addr);
+    if (!(this instanceof Address)) return new Address(addr, config);
+
     this.addr = addr;
     this.config = config;
     this.type = this.addr.substr(0, 2);
@@ -40,28 +41,22 @@ Address.prototype.describe = function() {
     const type = TYPE_NAMES[this.type];
     if (type) result.type = type;
 
-    const device = this.config.devices[this.addr];
+    const device = this.config.findDevice(this.addr);
     if (device) {
         if (device.name) result.name = device.name;
-        if (device.zone !== undefined) {
-            result.zone = device.zone;
-
-            const zoneName = this.config.zones[device.zone];
-            if (zoneName) {
-                result.zoneName = zoneName;
-            }
-        }
+        if (device.zone !== undefined) result.zone = device.zone;
+        if (device.zoneName) result.zoneName = device.zoneName;
     }
 
     return result;
 };
 
 Address.prototype.isConfigured = function() {
-    return this.addr in this.config.devices;
+    return this.config.isConfiguredDevice(this.addr);
 };
 
 Address.prototype.isSiteController = function() {
-    return this.isController() && this.config.controllers.includes(this.addr);
+    return this.isController() && this.config.isSiteController(this.addr);
 };
 
 Address.prototype.isController = function() { return this.type === ADDR_TYPE_CONTROLLER; };
