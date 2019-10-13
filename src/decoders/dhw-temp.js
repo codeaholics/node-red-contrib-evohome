@@ -1,5 +1,5 @@
 module.exports = function(m) {
-    if (!m.addr[0].isSensor() || !m.isInformation() || m.length !== 3) { return null; }
+    if (!m.addr[0].isSiteController() || !m.isReply() || m.length !== 3) { return null; }
 
     const result = {
         decoded: {
