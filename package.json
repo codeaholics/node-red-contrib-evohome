@@ -8,7 +8,13 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "pre-commit-header": "echo Running lint and tests. Please wait..."
     },
-    "keywords": ["NodeRED", "node-red", "Honeywell", "Evohome", "IoT"],
+    "keywords": [
+        "NodeRED",
+        "node-red",
+        "Honeywell",
+        "Evohome",
+        "IoT"
+    ],
     "author": "Danny Yates <danny@codeaholics.org>",
     "license": "Private",
     "pre-commit": [
@@ -28,9 +34,9 @@
         }
     },
     "devDependencies": {
-        "eslint": "^4.16.0",
+        "eslint": ">=4.18.2",
         "eslint-config-airbnb": "^16.1.0",
-        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-import": "^2.18.2",
         "pre-commit": "^1.2.2"
     }
 }
