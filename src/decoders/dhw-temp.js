@@ -17,11 +17,13 @@ module.exports = function(m) {
         return null;
     }
 
-    result.deduplication = {
-        key: `DHW_TEMP;${m.addr[0].toString()}`,
-        value: result.decoded.temperature,
-        seconds: 3600
-    };
+    // Don't dedupe. These only come every 5 minutes or so, and the temperature changes
+    // so slowly that deduping means there can be big gaps in graphs
+    // result.deduplication = {
+    //     key: `DHW_TEMP;${m.addr[0].toString()}`,
+    //     value: result.decoded.temperature,
+    //     seconds: 3600
+    // };
 
     return result;
 };
