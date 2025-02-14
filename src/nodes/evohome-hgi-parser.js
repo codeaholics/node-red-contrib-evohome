@@ -6,7 +6,7 @@ module.exports = function(RED) {
         const node = this;
         node.on('input', (msg) => {
             try {
-                msg.payload = parse(msg);
+                msg.payload = parse(msg.payload);
                 node.send([msg, null]);
             } catch (e) {
                 msg.payload = {
