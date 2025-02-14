@@ -3,6 +3,7 @@ const zoneTemp = require('./zone-temp');
 const heatDemand = require('./heat-demand');
 const setpoint = require('./setpoint');
 const dhwTemp = require('./dhw-temp');
+const zoneWindow = require('./zone-window');
 
 function externalSensor() {
     return {
@@ -40,14 +41,6 @@ function sysInfo() {
     return {
         decoded: {
             type: 'SYS_INFO'
-        }
-    };
-}
-
-function zoneWindow() {
-    return {
-        decoded: {
-            type: 'ZONE_WINDOW'
         }
     };
 }
