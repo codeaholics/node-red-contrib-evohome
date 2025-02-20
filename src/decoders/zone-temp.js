@@ -1,6 +1,6 @@
-const tempDecoder = require('./utils/temperature-decoder');
+import tempDecoder from './utils/temperature-decoder';
 
-module.exports = tempDecoder({
+export default tempDecoder({
     type: 'ZONE_TEMP',
     field: 'temperature'
 });

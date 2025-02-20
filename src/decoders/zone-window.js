@@ -1,4 +1,4 @@
-module.exports = function(m) {
+export default function(m) {
     if (!m.addr[0].isZone() || !m.addr[2].isSiteController() || !m.isInformation()) { return null; }
     if (m.length !== 3) { throw new Error('ZONE_WINDOW payload length incorrect'); }
 
@@ -12,4 +12,4 @@ module.exports = function(m) {
             windowOpen: window
         }
     };
-};
+}

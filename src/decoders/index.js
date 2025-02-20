@@ -1,9 +1,9 @@
-const batteryInfo = require('./battery-info');
-const zoneTemp = require('./zone-temp');
-const heatDemand = require('./heat-demand');
-const setpoint = require('./setpoint');
-const dhwTemp = require('./dhw-temp');
-const zoneWindow = require('./zone-window');
+import batteryInfo from './battery-info';
+import zoneTemp from './zone-temp';
+import heatDemand from './heat-demand';
+import setpoint from './setpoint';
+import dhwTemp from './dhw-temp';
+import zoneWindow from './zone-window';
 
 function externalSensor() {
     return {
@@ -93,7 +93,7 @@ function actuatorState() {
     };
 }
 
-module.exports = {
+export default {
     '0002': externalSensor,
     '0004': zoneName,
     '0008': heatDemand,

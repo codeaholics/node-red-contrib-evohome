@@ -1,4 +1,4 @@
-module.exports = function(d) {
+export default function(d) {
     const result = {
         measurement: 'HeatDemand',
         tags: {
@@ -21,4 +21,4 @@ module.exports = function(d) {
     putTag('zoneName', d.device.zoneName);
 
     return result;
-};
+}

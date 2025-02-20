@@ -1,4 +1,4 @@
-module.exports = function(m) {
+export default function(m) {
     // TODO https://github.com/codeaholics/node-red-contrib-evohome/issues/2
     if (!m.addr[0].isSensor() && !m.addr[2].isSiteController()) { return null; }
 
@@ -29,4 +29,4 @@ module.exports = function(m) {
             batteryLevel: battery
         }
     };
-};
+}

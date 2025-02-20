@@ -1,4 +1,4 @@
-module.exports = function(d) {
+export default function(d) {
     const result = {
         measurement: 'DHWTemp',
         tags: {
@@ -17,4 +17,4 @@ module.exports = function(d) {
     putTag('deviceType', d.device.type);
 
     return result;
-};
+}

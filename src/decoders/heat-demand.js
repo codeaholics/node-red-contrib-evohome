@@ -4,7 +4,7 @@ const SUBSYSTEMS = {
     252: 'boiler'
 };
 
-module.exports = function(m) {
+export default function(m) {
     if (m.length !== 2) { throw new Error('HEAT_DEMAND payload length incorrect'); }
 
     const zone = m.getUInt8();
@@ -37,4 +37,4 @@ module.exports = function(m) {
     }
 
     return result;
-};
+}

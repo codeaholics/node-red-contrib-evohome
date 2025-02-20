@@ -1,6 +1,6 @@
-const parse = require('../proto/hgi-parser');
+import parse from '../proto/hgi-parser';
 
-module.exports = function(RED) {
+export default function(RED) {
     function EvohomeHGIParser(config) {
         RED.nodes.createNode(this, config);
         const node = this;
@@ -18,4 +18,4 @@ module.exports = function(RED) {
         });
     }
     RED.nodes.registerType('evohome-hgi-parser', EvohomeHGIParser);
-};
+}

@@ -1,4 +1,4 @@
-module.exports = function(str) {
+export default function(str) {
     function ensure(b, e) {
         if (!b) throw new Error(e);
     }
@@ -41,4 +41,4 @@ module.exports = function(str) {
             payload
         }
     };
-};
+}

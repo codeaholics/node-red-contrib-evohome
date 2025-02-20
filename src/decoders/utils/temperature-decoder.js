@@ -1,4 +1,4 @@
-module.exports = function(options) {
+export default function(options) {
     return function(m, config) {
         if (m.isRequest() && m.length === 1) { return null; }
         if (m.length < 3) { throw new Error(`${options.type} payload too short`); }
@@ -36,4 +36,4 @@ module.exports = function(options) {
 
         return results;
     };
-};
+}

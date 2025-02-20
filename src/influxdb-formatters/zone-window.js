@@ -1,4 +1,4 @@
-module.exports = function(d) {
+export default function(d) {
     const result = {
         measurement: 'ZoneWindow',
         tags: {
@@ -20,4 +20,4 @@ module.exports = function(d) {
     putTag('zoneName', d.device.zoneName);
 
     return result;
-};
+}

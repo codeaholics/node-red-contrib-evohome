@@ -1,4 +1,4 @@
-module.exports = function(m) {
+export default function(m) {
     if (!m.addr[0].isSiteController() || !m.isReply() || m.length !== 3) { return null; }
 
     const result = {
@@ -26,4 +26,4 @@ module.exports = function(m) {
     // };
 
     return result;
-};
+}

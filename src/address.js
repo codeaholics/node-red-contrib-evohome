@@ -21,53 +21,55 @@ const TYPE_NAMES = {
     [ADDR_TYPE_T87RF_THERMOSTAT]: 'thermostat'
 };
 
-function Address(addr, config) {
-    if (!(this instanceof Address)) return new Address(addr, config);
+class Address {
+    constructor(addr, config) {
+        if (!(this instanceof Address)) return new Address(addr, config);
 
-    this.addr = addr;
-    this.config = config;
-    this.type = this.addr.substr(0, 2);
-}
-
-Address.prototype.toString = function() {
-    return this.addr;
-};
-
-Address.prototype.describe = function() {
-    const result = {
-        addr: this.addr
-    };
-
-    const type = TYPE_NAMES[this.type];
-    if (type) result.type = type;
-
-    const device = this.config.findDevice(this.addr);
-    if (device) {
-        if (device.name) result.name = device.name;
-        if (device.zone !== undefined) result.zone = device.zone;
-        if (device.zoneName) result.zoneName = device.zoneName;
+        this.addr = addr;
+        this.config = config;
+        this.type = this.addr.substr(0, 2);
     }
 
-    return result;
-};
+    toString() {
+        return this.addr;
+    }
 
-Address.prototype.isConfigured = function() {
-    return this.config.isConfiguredDevice(this.addr);
-};
+    describe() {
+        const result = {
+            addr: this.addr
+        };
 
-Address.prototype.isSiteController = function() {
-    return this.isController() && this.config.isSiteController(this.addr);
-};
+        const type = TYPE_NAMES[this.type];
+        if (type) result.type = type;
 
-Address.prototype.isController = function() { return this.type === ADDR_TYPE_CONTROLLER; };
-Address.prototype.isZone = function() { return this.type === ADDR_TYPE_ZONE; };
-Address.prototype.isSensor = function() { return this.type === ADDR_TYPE_SENSOR; };
-Address.prototype.isOpenTherm = function() { return this.type === ADDR_TYPE_OPENTHERM; };
-Address.prototype.isRelay = function() { return this.type === ADDR_TYPE_RELAY; };
-Address.prototype.isGateway = function() { return this.type === ADDR_TYPE_GATEWAY; };
-Address.prototype.isRemote = function() { return this.type === ADDR_TYPE_REMOTE; };
-Address.prototype.isThermostat = function() {
-    return this.type === ADDR_TYPE_T87RF_THERMOSTAT || this.type === ADDR_TYPE_DTS92_THERMOSTAT;
-};
+        const device = this.config.findDevice(this.addr);
+        if (device) {
+            if (device.name) result.name = device.name;
+            if (device.zone !== undefined) result.zone = device.zone;
+            if (device.zoneName) result.zoneName = device.zoneName;
+        }
 
-module.exports = Address;
+        return result;
+    }
+
+    isConfigured() {
+        return this.config.isConfiguredDevice(this.addr);
+    }
+
+    isSiteController() {
+        return this.isController() && this.config.isSiteController(this.addr);
+    }
+
+    isController() { return this.type === ADDR_TYPE_CONTROLLER; }
+    isZone() { return this.type === ADDR_TYPE_ZONE; }
+    isSensor() { return this.type === ADDR_TYPE_SENSOR; }
+    isOpenTherm() { return this.type === ADDR_TYPE_OPENTHERM; }
+    isRelay() { return this.type === ADDR_TYPE_RELAY; }
+    isGateway() { return this.type === ADDR_TYPE_GATEWAY; }
+    isRemote() { return this.type === ADDR_TYPE_REMOTE; }
+    isThermostat() {
+        return this.type === ADDR_TYPE_T87RF_THERMOSTAT || this.type === ADDR_TYPE_DTS92_THERMOSTAT;
+    }
+}
+
+export default Address;
