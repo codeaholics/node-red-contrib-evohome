@@ -1,7 +1,7 @@
 module.exports = function(m) {
     if (m.isRequest()) { return null; }
     if (!((m.isReply() && m.addr[0].isOpenTherm() && m.addr[1].isSiteController()) ||
-          (m.isInformation() && m.addr[0].isRelay() && m.addr[0].isConfigured()))) {
+          (m.isInformation() && (m.addr[0].isRelay() || m.addr[0].isOpenTherm) && m.addr[0].isConfigured()))) {
         return null;
     }
     if (m.length % 3 !== 0) { throw new Error('ACTUATOR_STATE payload length incorrect'); }
