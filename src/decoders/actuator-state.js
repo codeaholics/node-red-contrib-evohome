@@ -20,12 +20,12 @@ module.exports = function(m) {
 
     if (m.length >= 3) {
         m.skip(1);
-        result.decoded.modulation = m.readUInt8() / 200;
+        result.decoded.modulation = m.getUInt8() / 200;
         m.skip(1);
     }
 
     if (m.length >= 6) {
-        const state = m.readUInt8();
+        const state = m.getUInt8();
         result.decoded.ch = readBit(state, 1) * 100;
         result.decoded.dhw = readBit(state, 2) * 100;
         result.decoded.flame = readBit(state, 3) * 100;
@@ -34,8 +34,8 @@ module.exports = function(m) {
     }
 
     if (m.length >= 9) {
-        result.decoded.chEnabled = readBit(m.readUInt8(), 0);
-        result.decoded.chSetpoint = m.readUInt8();
+        result.decoded.chEnabled = readBit(m.getUInt8(), 0);
+        result.decoded.chSetpoint = m.getUInt8();
         m.skip(1);
     }
 
