@@ -1,3 +1,5 @@
+/* eslint-disable indent */
+/* eslint-disable function-paren-newline */
 import {expect, describe, test} from 'vitest';
 import parse from '../../src/proto/hgi-parser';
 

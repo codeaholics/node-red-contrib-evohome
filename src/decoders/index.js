@@ -4,6 +4,7 @@ const heatDemand = require('./heat-demand');
 const setpoint = require('./setpoint');
 const dhwTemp = require('./dhw-temp');
 const zoneWindow = require('./zone-window');
+const actuatorState = require('./actuator-state');
 
 function externalSensor() {
     return {
@@ -81,14 +82,6 @@ function actuatorCheck() {
     return {
         decoded: {
             type: 'ACTUATOR_CHECK'
-        }
-    };
-}
-
-function actuatorState() {
-    return {
-        decoded: {
-            type: 'ACTUATOR_STATE'
         }
     };
 }

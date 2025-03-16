@@ -9,7 +9,8 @@ function Config(rawConfig) {
 
     rawConfig.forEach((site) => {
         this.allControllers[site.controller] = {
-            zones: site.zones
+            zones: site.zones,
+            relays: site.relays
         };
 
         Object.getOwnPropertyNames(site.devices).forEach((addr) => {
@@ -19,6 +20,22 @@ function Config(rawConfig) {
                 zoneName: site.zones[site.devices[addr].zone]
             });
         });
+
+        if (site.relays) {
+            if (site.relays.dhw) {
+                this.allDevices[site.relays.dhw] = Object.freeze({
+                    name: 'Hot Water',
+                    subsystem: 'dhw'
+                });
+            }
+
+            if (site.relays.boiler) {
+                this.allDevices[site.relays.boiler] = Object.freeze({
+                    name: 'Boiler',
+                    subsystem: 'boiler'
+                });
+            }
+        }
     });
 }
 
