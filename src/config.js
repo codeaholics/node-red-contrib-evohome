@@ -36,6 +36,13 @@ function Config(rawConfig) {
                 });
             }
         }
+
+        if (site.opentherm) {
+            this.allDevices[site.opentherm] = Object.freeze({
+                name: 'OpenTherm',
+                subsystem: 'opentherm'
+            });
+        }
     });
 }
 
