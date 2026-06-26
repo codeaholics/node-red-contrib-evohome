@@ -1,6 +1,6 @@
 import {expect, describe, test} from 'vitest';
 import decode from '../../src/decoders/battery-info';
-import {randomControllerAddr, randomSensorAddr, randomZoneAddr, makeConfig, makeMessage} from './helpers';
+import {randomControllerAddr, randomSensorAddr, randomZoneAddr, makeConfig, makeMessage} from '../helpers';
 
 const CONTROLLER = randomControllerAddr();
 const SENSOR = randomSensorAddr();

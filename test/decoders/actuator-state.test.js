@@ -1,6 +1,6 @@
 import {expect, describe, test} from 'vitest';
 import decode from '../../src/decoders/actuator-state';
-import {randomControllerAddr, randomRelayAddr, randomOpenThermAddr, makeConfig, makeMessage} from './helpers';
+import {randomControllerAddr, randomRelayAddr, randomOpenThermAddr, makeConfig, makeMessage} from '../helpers';
 
 const CONTROLLER = randomControllerAddr();
 const RELAY = randomRelayAddr();

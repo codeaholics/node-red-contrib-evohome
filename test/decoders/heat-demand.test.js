@@ -1,6 +1,6 @@
 import {expect, describe, test} from 'vitest';
 import decode from '../../src/decoders/heat-demand';
-import {randomControllerAddr, randomZoneAddr, makeConfig, makeMessage} from './helpers';
+import {randomControllerAddr, randomZoneAddr, makeConfig, makeMessage} from '../helpers';
 
 const CONTROLLER = randomControllerAddr();
 const ZONE = randomZoneAddr();
