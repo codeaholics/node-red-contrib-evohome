@@ -13,8 +13,8 @@ export const randomSensorAddr = () => randomAddr('07');
 export const randomOpenThermAddr = () => randomAddr('10');
 export const randomRelayAddr = () => randomAddr('13');
 
-export function makeConfig(controller) {
-    return new Config({controller, zones: {}, devices: {}});
+export function makeConfig(controller, {devices = {}, zones = {}} = {}) {
+    return new Config({controller, zones, devices});
 }
 
 export function makeMessage(
