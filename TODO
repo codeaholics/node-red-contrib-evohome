@@ -1,0 +1,30 @@
+135822 30C9 x zone temp
+120479 2349   setpoint override (mode)
+ 44812 3220   --- OpenTherm related
+ 43980 3150 x heat demand
+ 33252 3EF0   actuator state
+ 22606 2309 x setpoint
+ 22013 0008 x heat demand
+ 18042 12B0 x zone window  (?)
+ 12358 1F41   dhw state
+ 11514 1F09
+  6116 1260 x dhw temp
+  5495 22D9   --- OpenTherm related
+  2699 3B00   actuator check
+  1714 1060 x battery info
+  1656 1FD4   --- OpenTherm related
+  1382 000A   zone info
+   767 313F
+   760 0100
+   654 0004
+   247 3120
+   214 10A0   dhw  setpoint (not handled by Domoticz)
+   159 0418
+   149 1100
+   133 0009
+    65 10E0
+    29 2E04   controller mode
+
+https://github.com/smar000/evohome-Listener/blob/master/evolistener.py
+https://www.domoticaforum.eu/download/file.php?id=1396
+http://files.domoticaforum.eu/uploads/Evihome/WirelessProtocol.pdf
