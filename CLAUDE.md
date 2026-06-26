@@ -56,9 +56,9 @@ test/decoders/           # Decoder tests (mostly stubs — expand these)
 
 Each command code maps to a decoder in `src/decoders/`. Decoders return `{decoded, deduplication?}` or an array of results, or `null` to skip. See `TODO` for message codes, their frequency in the wild, and implementation status.
 
-## Device address types
+## Device addresses
 
-Two-digit prefix encodes the device class. See `src/address.js` for the full mapping.
+Evohome addresses take the form `type:id` — a two-digit device class prefix and a six-digit serial number (e.g. `04:025902`). The type prefix is what drives logic: routing, decoding, filtering. The ID is incidental. See `src/address.js` for the full type mapping.
 
 ## Code conventions
 
