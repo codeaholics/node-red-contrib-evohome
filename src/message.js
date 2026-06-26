@@ -41,12 +41,14 @@ Message.prototype.skip = function(c) {
 };
 
 Message.prototype.getUInt8 = function() {
+    if (this.isEOF()) throw new Error('Attempt to read beyond end of message.');
     const result = this.bytes.readUInt8(this.p);
     this.p += 1;
     return result;
 };
 
 Message.prototype.getUInt16 = function() {
+    if (this.isEOF()) throw new Error('Attempt to read beyond end of message.');
     const result = this.bytes.readUInt16BE(this.p);
     this.p += 2;
     return result;
