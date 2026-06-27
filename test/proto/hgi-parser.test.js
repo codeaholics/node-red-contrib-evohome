@@ -43,8 +43,11 @@ describe('HGI parser', () => {
 
     testFailure('payload not hex encoded', bad(9, 'GHI'), 'badly formatted payload');
 
-    testFailure('payload doesn\'t match length', '---  I --- --:------ --:------ --:------ 1111 003 04000', 'payload length does not match declared length');
-    testFailure('payload doesn\'t match length', '---  I --- --:------ --:------ --:------ 1111 003 0400000', 'payload length does not match declared length');
+    const shortPayload = '---  I --- --:------ --:------ --:------ 1111 003 04000';
+    const longPayload = '---  I --- --:------ --:------ --:------ 1111 003 0400000';
+    const lengthMismatch = 'payload length does not match declared length';
+    testFailure('payload too short for declared length', shortPayload, lengthMismatch);
+    testFailure('payload too long for declared length', longPayload, lengthMismatch);
 
     test('upper case', () => {
         const message = '--- rp --- 00:000000 00:000000 00:000000 5a5a 003 0a0b0c';

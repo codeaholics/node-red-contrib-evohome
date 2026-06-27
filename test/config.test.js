@@ -123,6 +123,36 @@ describe('Config', () => {
         });
     });
 
+    describe('controllers()', () => {
+        test('returns the single configured controller', () => {
+            expect(withDefaults().controllers()).toEqual([CONTROLLER]);
+        });
+
+        test('returns every controller in a multi-site config', () => {
+            const A = randomControllerAddr();
+            const B = randomControllerAddr();
+            const cfg = new Config([
+                {controller: A, zones: {}, devices: {}},
+                {controller: B, zones: {}, devices: {}}
+            ]);
+            expect(cfg.controllers()).toEqual([A, B]);
+        });
+    });
+
+    describe('zones()', () => {
+        test('returns the 1-based zone numbers for a controller', () => {
+            expect(withDefaults().zones(CONTROLLER)).toEqual([1, 2]);
+        });
+
+        test('returns an empty array when no zones are configured', () => {
+            expect(makeConfig(CONTROLLER, {zones: {}}).zones(CONTROLLER)).toEqual([]);
+        });
+
+        test('throws for an unknown controller', () => {
+            expect(() => withDefaults().zones(randomControllerAddr())).toThrow();
+        });
+    });
+
     describe('multi-site (array of configs)', () => {
         const CONTROLLER_B = randomControllerAddr();
         const DEVICE_A = randomZoneAddr();

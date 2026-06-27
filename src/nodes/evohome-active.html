@@ -1,0 +1,41 @@
+<script type='text/javascript'>
+    RED.nodes.registerType('evohome-active', {
+        category: 'Evohome',
+        defaults: {
+            name: {value: ''},
+            config: {type: 'evohome-site-configuration', required: true},
+            interval: {value: 5, required: true, validate: RED.validators.number()},
+            gateway: {value: '18:000730'}
+        },
+        color: '#A6BBCF',
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: 'active',
+        icon: 'hash.png',
+        label: function() {
+            return this.name || 'Active';
+        },
+        labelStyle: function() {
+            return this.name ? 'node_label_italic': '';
+        }
+    });
+</script>
+
+<script type='text/x-red' data-template-name='evohome-active'>
+    <div class='form-row'>
+        <label for='node-input-name'><i class='fa fa-tag'></i> Name</label>
+        <input type='text' id='node-input-name' placeholder='Name'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-config'><i class='fa fa-random'></i> Site configuration</label>
+        <input type='text' id='node-input-config'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-interval'><i class='fa fa-clock-o'></i> Poll interval (min)</label>
+        <input type='number' id='node-input-interval' placeholder='5'>
+    </div>
+    <div class='form-row'>
+        <label for='node-input-gateway'><i class='fa fa-id-card-o'></i> Gateway address</label>
+        <input type='text' id='node-input-gateway' placeholder='18:000730'>
+    </div>
+</script>
