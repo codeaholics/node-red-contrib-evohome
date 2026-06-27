@@ -37,6 +37,10 @@ class Config {
     findDevice(addr) { return this.#allDevices[addr]; }
 
     findZoneName(controllerAddr, zone) { return this.#allControllers[controllerAddr].zones[zone]; }
+
+    controllers() { return Object.keys(this.#allControllers); }
+
+    zones(controllerAddr) { return Object.keys(this.#allControllers[controllerAddr].zones).map(Number); }
 }
 
 module.exports = Config;

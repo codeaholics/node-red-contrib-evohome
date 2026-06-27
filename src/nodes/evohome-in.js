@@ -6,14 +6,23 @@ module.exports = function(RED) {
         if (node.server) {
             node.log('ensuring connection');
             node.server.ensureConnection();
-            node.server.on('evohome-msg', (line) => {
+
+            const onMessage = (line) => {
                 node.send({
                     timestamp: Date.now(),
                     payload: line.trim()
                 });
-            });
-            node.server.on('status', (status) => {
+            };
+            const onStatus = (status) => {
                 node.status(status);
+            };
+
+            node.server.on('evohome-msg', onMessage);
+            node.server.on('status', onStatus);
+
+            node.on('close', () => {
+                node.server.removeListener('evohome-msg', onMessage);
+                node.server.removeListener('status', onStatus);
             });
         }
     }

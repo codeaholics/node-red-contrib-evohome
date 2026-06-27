@@ -8,9 +8,15 @@ module.exports = function(RED) {
                 node.server.send(msg.payload);
             }
         });
-        node.server.on('status', (status) => {
-            node.status(status);
-        });
+        if (node.server) {
+            const onStatus = (status) => {
+                node.status(status);
+            };
+            node.server.on('status', onStatus);
+            node.on('close', () => {
+                node.server.removeListener('status', onStatus);
+            });
+        }
     }
     RED.nodes.registerType('evohome-out', EvohomeOut);
 };
