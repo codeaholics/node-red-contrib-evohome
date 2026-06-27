@@ -1,6 +1,8 @@
 import {expect, describe, test} from 'vitest';
 import Config from '../src/config';
-import {makeConfig, randomControllerAddr, randomZoneAddr, randomRelayAddr, randomOpenThermAddr} from './helpers';
+import {
+    makeConfig, randomControllerAddr, randomZoneAddr, randomRelayAddr, randomOpenThermAddr
+} from './helpers';
 
 const CONTROLLER = randomControllerAddr();
 const ZONE_DEVICE = randomZoneAddr();

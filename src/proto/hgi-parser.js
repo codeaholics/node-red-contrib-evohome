@@ -10,7 +10,7 @@ module.exports = function(str) {
     // not be able to help with logs to investigate further.
     ensure(str.indexOf('\t') === -1, 'malformed message');
 
-    const fields = str.split(/\s+/).map(s => s.toUpperCase());
+    const fields = str.split(/\s+/).map((s) => s.toUpperCase());
     ensure(fields.length === 9, 'incorrect number of fields');
 
     const [rssi, type, unk1, addr0, addr1, addr2, cmd, len, payload] = fields;

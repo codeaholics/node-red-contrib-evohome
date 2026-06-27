@@ -14,7 +14,7 @@ function findAddresses(obj, result = []) {
             findAddresses(obj[i], result);
         }
     } else {
-        Object.keys(obj).forEach(k => findAddresses(obj[k], result));
+        Object.keys(obj).forEach((k) => findAddresses(obj[k], result));
     }
     return result;
 }
@@ -31,9 +31,9 @@ module.exports = function(RED) {
             /* eslint-disable dot-location */
             findAddresses(msg.payload).
                 filter((elem, pos, arr) => arr.indexOf(elem) === pos).
-                map(addr => new Address(addr, node.config)).
-                filter(addr => !addr.isConfigured() && !addr.isSiteController()).
-                forEach(addr => node.send({
+                map((addr) => new Address(addr, node.config)).
+                filter((addr) => !addr.isConfigured() && !addr.isSiteController()).
+                forEach((addr) => node.send({
                     payload: addr.describe()
                 }));
             /* eslint-enable dot-location */
