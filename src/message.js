@@ -1,57 +1,55 @@
 const Address = require('./address');
 
-function Message(parsed, config) {
-    if (!(this instanceof Message)) return new Message(parsed, config);
+class Message {
+    #p = 0;
 
-    this.parsed = parsed;
-    this.config = config;
+    #bytes;
 
-    this.bytes = Buffer.from(this.parsed.payload, 'hex');
-    this.addrs = Object.freeze([
-        new Address(this.parsed.addr[0], this.config),
-        new Address(this.parsed.addr[1], this.config),
-        new Address(this.parsed.addr[2], this.config)
-    ]);
-    this.p = 0;
+    #parsed;
+
+    #addrs;
+
+    constructor(parsed, config) {
+        this.#parsed = parsed;
+        this.#bytes = Buffer.from(parsed.payload, 'hex');
+        this.#addrs = Object.freeze([
+            new Address(parsed.addr[0], config),
+            new Address(parsed.addr[1], config),
+            new Address(parsed.addr[2], config),
+        ]);
+    }
+
+    get length() { return this.#parsed.len; }
+
+    get addr() { return this.#addrs; }
+
+    isInformation() { return this.#parsed.type === 'I'; }
+
+    isRequest() { return this.#parsed.type === 'RQ'; }
+
+    isReply() { return this.#parsed.type === 'RP'; }
+
+    isWrite() { return this.#parsed.type === 'W'; }
+
+    incorrectSite() {
+        return this.#addrs.reduce((acc, it) => acc || (it.isController() && !it.isSiteController()), false);
+    }
+
+    isEOF() { return this.#p >= this.#parsed.len; }
+
+    skip(c) { this.#p += c; }
+
+    getUInt8() {
+        if (this.isEOF()) throw new Error('Attempt to read beyond end of message.');
+        return this.#bytes.readUInt8(this.#p++); // eslint-disable-line no-plusplus
+    }
+
+    getUInt16() {
+        if (this.#p + 2 > this.#parsed.len) throw new Error('Attempt to read beyond end of message.');
+        const result = this.#bytes.readUInt16BE(this.#p);
+        this.#p += 2;
+        return result;
+    }
 }
-
-Object.defineProperty(Message.prototype, 'length', {
-    get() { return this.parsed.len; }
-});
-
-Object.defineProperty(Message.prototype, 'addr', {
-    get() { return this.addrs; }
-});
-
-Message.prototype.isInformation = function() { return this.parsed.type === 'I'; };
-Message.prototype.isRequest = function() { return this.parsed.type === 'RQ'; };
-Message.prototype.isReply = function() { return this.parsed.type === 'RP'; };
-Message.prototype.isWrite = function() { return this.parsed.type === 'W'; };
-
-Message.prototype.incorrectSite = function() {
-    return this.addrs.reduce((acc, it) => acc || (it.isController() && !it.isSiteController()), false);
-};
-
-Message.prototype.isEOF = function() {
-    return this.p >= this.parsed.len;
-};
-
-Message.prototype.skip = function(c) {
-    this.p += c;
-};
-
-Message.prototype.getUInt8 = function() {
-    if (this.isEOF()) throw new Error('Attempt to read beyond end of message.');
-    const result = this.bytes.readUInt8(this.p);
-    this.p += 1;
-    return result;
-};
-
-Message.prototype.getUInt16 = function() {
-    if (this.p + 2 > this.parsed.len) throw new Error('Attempt to read beyond end of message.');
-    const result = this.bytes.readUInt16BE(this.p);
-    this.p += 2;
-    return result;
-};
 
 module.exports = Message;

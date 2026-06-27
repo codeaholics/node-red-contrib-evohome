@@ -1,5 +1,8 @@
 {
-    extends: airbnb/base,
+    extends: airbnb-base,
+    parserOptions: {
+        ecmaVersion: 2022
+    },
     rules: {
         indent: [2, 4, {SwitchCase: 1}],
         comma-dangle: [1, only-multiline],

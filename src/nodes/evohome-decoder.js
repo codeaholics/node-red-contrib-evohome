@@ -45,9 +45,9 @@ module.exports = function(RED) {
                         node.context().set('cache', cache);
 
                         const cacheEntry = cache[result.deduplication.key];
-                        if (!cacheEntry ||   // No cache entry
-                                cacheEntry.value !== result.deduplication.value ||  // Value has changed
-                                cacheEntry.expiry < now) {  // Cache entry has expired
+                        if (!cacheEntry   // No cache entry
+                                || cacheEntry.value !== result.deduplication.value  // Value has changed
+                                || cacheEntry.expiry < now) {  // Cache entry has expired
                             // Create or update the cache entry
                             cache[result.deduplication.key] = {
                                 value: result.deduplication.value,

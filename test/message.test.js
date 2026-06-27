@@ -1,6 +1,8 @@
 import {expect, describe, test} from 'vitest';
 import Message from '../src/message';
-import {makeConfig, makeMessage, randomControllerAddr, randomZoneAddr} from './helpers';
+import {
+    makeConfig, makeMessage, randomControllerAddr, randomZoneAddr
+} from './helpers';
 
 const CONTROLLER = randomControllerAddr();
 const OTHER_CONTROLLER = randomControllerAddr();
