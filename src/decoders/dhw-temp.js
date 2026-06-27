@@ -1,5 +1,7 @@
 module.exports = function(m) {
-    if (!m.addr[0].isSiteController() || !m.isReply() || m.length !== 3) { return null; }
+    const isRPFromController = m.addr[0].isSiteController() && m.isReply();
+    const isInfoFromSensor = m.addr[0].isSensor() && m.isInformation();
+    if ((!isRPFromController && !isInfoFromSensor) || m.length !== 3) { return null; }
 
     const result = {
         decoded: {
