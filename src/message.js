@@ -48,7 +48,7 @@ Message.prototype.getUInt8 = function() {
 };
 
 Message.prototype.getUInt16 = function() {
-    if (this.isEOF()) throw new Error('Attempt to read beyond end of message.');
+    if (this.p + 2 > this.parsed.len) throw new Error('Attempt to read beyond end of message.');
     const result = this.bytes.readUInt16BE(this.p);
     this.p += 2;
     return result;
