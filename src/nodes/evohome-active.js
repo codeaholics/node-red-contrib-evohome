@@ -1,10 +1,15 @@
 const Config = require('../config');
 const requestZoneTemp = require('../requests/zone-temp');
+const requestSetpointOverride = require('../requests/setpoint-override');
+
+// The per-zone requests issued every poll cycle. Add a builder here to poll
+// another datum for every zone.
+const ZONE_REQUESTS = [requestZoneTemp, requestSetpointOverride];
 
 // How often we drain one message from the queue onto the output. The radio is
 // half-duplex and collision-prone, and a single poll cycle enqueues a burst
-// (one request per zone), so we deliberately space emissions out rather than
-// firing them all at once.
+// (several requests per zone), so we deliberately space emissions out rather
+// than firing them all at once.
 const PACE_MS = 1000;
 
 module.exports = function(RED) {
@@ -20,10 +25,12 @@ module.exports = function(RED) {
         // Logic only ever enqueues; the paced drainer is the only thing that emits.
         node.queue = [];
 
-        function enqueueZoneTempPolls() {
+        function enqueuePolls() {
             config.controllers().forEach((controller) => {
                 config.zones(controller).forEach((zone) => {
-                    node.queue.push({payload: {parsed: requestZoneTemp(controller, zone, gateway)}});
+                    ZONE_REQUESTS.forEach((build) => {
+                        node.queue.push({payload: {parsed: build(controller, zone, gateway)}});
+                    });
                 });
             });
             node.status({fill: 'green', shape: 'dot', text: `queued (${node.queue.length})`});
@@ -35,8 +42,8 @@ module.exports = function(RED) {
             node.status({fill: 'green', shape: 'ring', text: `sending (${node.queue.length} queued)`});
         }
 
-        enqueueZoneTempPolls();
-        node.pollTimer = setInterval(enqueueZoneTempPolls, intervalMs);
+        enqueuePolls();
+        node.pollTimer = setInterval(enqueuePolls, intervalMs);
         node.drainTimer = setInterval(drain, PACE_MS);
 
         // Reserved: a future increment will observe decoded replies here to drive

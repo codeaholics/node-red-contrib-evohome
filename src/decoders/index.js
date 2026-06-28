@@ -5,6 +5,7 @@ const setpoint = require('./setpoint');
 const dhwTemp = require('./dhw-temp');
 const zoneWindow = require('./zone-window');
 const actuatorState = require('./actuator-state');
+const setpointOverride = require('./setpoint-override');
 
 function externalSensor() {
     return {
@@ -58,14 +59,6 @@ function binding() {
     return {
         decoded: {
             type: 'BINDING'
-        }
-    };
-}
-
-function setpointOverride() {
-    return {
-        decoded: {
-            type: 'SETPOINT_OVERRIDE'
         }
     };
 }

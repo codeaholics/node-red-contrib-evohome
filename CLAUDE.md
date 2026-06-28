@@ -46,6 +46,7 @@ src/nodes/               # 10 Node-RED node definitions
 src/decoders/            # Inbound: one decoder per command code (parsed → decoded)
 src/decoders/utils/      # Shared helpers (temperature-decoder.js)
 src/requests/            # Outbound: one builder per command code (intent → parsed)
+src/requests/utils/      # Shared request-builder factories (zone-selector-request.js)
 src/influxdb-formatters/ # One file per message type for InfluxDB output
 src/proto/               # HGI80 wire format parser (hgi-parser) and encoder (hgi-encoder)
 src/address.js           # Device address type-checking and name lookup
