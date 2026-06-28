@@ -45,4 +45,21 @@ describe('setpoint decoder (2309)', () => {
     test('returns null for RQ with 1-byte payload', () => {
         expect(decode(msg('RQ', ZONE, '00'))).toBeNull();
     });
+
+    test('decodes a reply (RP) from the controller', () => {
+        const results = decode(msg('RP', CONTROLLER, '000834'), config);
+        expect(results).toHaveLength(1);
+        expect(results[0].decoded.setpoint).toBe(21.00);
+    });
+
+    test('ignores a write (W) — only I and RP are readings', () => {
+        expect(decode(msg('W', CONTROLLER, '000834'), config)).toBeNull();
+    });
+
+    test('deduplicates, keyed by controller and zone index (not zoneName)', () => {
+        const dedup = decode(msg('I', CONTROLLER, '000834'), config)[0].deduplication;
+        expect(dedup.key.split(';')).toEqual(['SETPOINT', CONTROLLER, '1']);
+        expect(dedup.value).toBe(21.00);
+        expect(dedup.seconds).toBe(3600);
+    });
 });

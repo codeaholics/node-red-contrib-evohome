@@ -56,11 +56,57 @@ describe('setpoint override decoder (2349)', () => {
         expect(decode(msg('RQ', CONTROLLER, '00'), config)).toBeNull();
     });
 
+    test('decodes a reply (RP) from the controller', () => {
+        const result = decode(msg('RP', CONTROLLER, '00083402FFFFFF'), config);
+        expect(result.decoded.type).toBe('SETPOINT_OVERRIDE');
+        expect(result.decoded.setpoint).toBe(21.00);
+    });
+
+    test('ignores a write (W) — only I and RP are readings', () => {
+        expect(decode(msg('W', CONTROLLER, '00083402FFFFFF'), config)).toBeNull();
+    });
+
     test('throws on an unexpected mode', () => {
         expect(() => decode(msg('I', CONTROLLER, '00083401FFFFFF'), config)).toThrow('unexpected mode');
     });
 
     test('throws on an invalid payload length', () => {
         expect(() => decode(msg('I', CONTROLLER, '000834'), config)).toThrow('incorrect payload length');
+    });
+
+    describe('deduplication', () => {
+        test('keyed by controller and zone index, value combines setpoint and mode', () => {
+            const dedup = decode(msg('I', CONTROLLER, '00083402FFFFFF'), config).deduplication;
+            expect(dedup.key.split(';')).toEqual(['SETPOINT_OVERRIDE', CONTROLLER, '1']);
+            expect(dedup.value).toBe('21;Permanent');
+            expect(dedup.seconds).toBe(3600);
+        });
+
+        test('renaming a zone does not change the key (zoneName is not part of it)', () => {
+            const renamed = makeConfig(CONTROLLER, {zones: {1: 'Lounge', 2: 'Bedroom'}});
+            const a = decode(msg('I', CONTROLLER, '00083402FFFFFF'), config);
+            const b = decode(msg('I', CONTROLLER, '00083402FFFFFF'), renamed);
+            expect(a.decoded.zoneName).toBe('Living Room');
+            expect(b.decoded.zoneName).toBe('Lounge');
+            expect(a.deduplication.key).toBe(b.deduplication.key);
+        });
+
+        test('a mode-only change at the same setpoint still emits (different value)', () => {
+            const permanent = decode(msg('I', CONTROLLER, '00083402FFFFFF'), config);
+            const temporary = decode(msg('I', CONTROLLER, '00083404FFFFFF000000000000'), config);
+            expect(permanent.decoded.setpoint).toBe(temporary.decoded.setpoint);
+            expect(permanent.deduplication.value).not.toBe(temporary.deduplication.value);
+        });
+
+        test('different zones get different keys', () => {
+            const z1 = decode(msg('I', CONTROLLER, '00083402FFFFFF'), config);
+            const z2 = decode(msg('I', CONTROLLER, '01083402FFFFFF'), config);
+            expect(z1.deduplication.key).not.toBe(z2.deduplication.key);
+        });
+
+        test('follow-schedule (no setpoint) yields a stable value', () => {
+            const dedup = decode(msg('I', CONTROLLER, '007FFF00FFFFFF'), config).deduplication;
+            expect(dedup.value).toBe(';FollowSchedule');
+        });
     });
 });

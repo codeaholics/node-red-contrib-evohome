@@ -9,8 +9,11 @@ const OVERRIDE_MODES = {
 };
 
 module.exports = function(m, config) {
-    // Request form (and the echo of our own request) is a single zone byte.
-    if (m.isRequest() && m.length === 1) { return null; }
+    // A reading only arrives as a broadcast (I) or a reply to a poll (RP). A
+    // request (RQ) carries the gateway in addr0, not a reading, and a write (W)
+    // is a command whose result we pick up via the subsequent RP — so neither
+    // should be decoded. This makes "addr0 is the source" true by construction.
+    if (!m.isInformation() && !m.isReply()) { return null; }
 
     // Only the controller reports setpoint overrides.
     if (!m.addr[0].isController()) { return null; }
@@ -42,5 +45,18 @@ module.exports = function(m, config) {
         decoded.setpoint = setpoint / 100;
     }
 
-    return {decoded};
+    return {
+        decoded,
+        deduplication: {
+            // The controller multiplexes every zone onto its own address, so the
+            // zone index is part of the identity. zoneName is deliberately absent
+            // — renaming a zone must not reset dedup.
+            key: `SETPOINT_OVERRIDE;${m.addr[0].toString()};${zone}`,
+            // Both fields are emit-worthy: a mode change at the same temperature
+            // (or vice versa) must still pass through, so combine them. An absent
+            // setpoint (follow-schedule) renders as an empty leading segment.
+            value: [decoded.setpoint, mode].join(';'),
+            seconds: 3600
+        }
+    };
 };
