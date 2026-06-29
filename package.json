@@ -6,6 +6,7 @@
     "scripts": {
         "lint": "eslint .",
         "test": "vitest",
+        "backfill": "node scripts/backfill.js",
         "pre-commit-header": "echo Running lint and tests. Please wait..."
     },
     "keywords": [
@@ -36,6 +37,7 @@
         }
     },
     "devDependencies": {
+        "cli-progress": "^3.12.0",
         "eslint": "^8.57.1",
         "eslint-config-airbnb-base": "^15.0.0",
         "eslint-plugin-import": "^2.32.0",
