@@ -1,12 +1,12 @@
 135822 30C9 x zone temp
-120479 2349   setpoint override (mode)
+120479 2349 x setpoint override (mode)
  44812 3220   --- OpenTherm related
  43980 3150 x heat demand
  33252 3EF0   actuator state
  22606 2309 x setpoint
  22013 0008 x heat demand
  18042 12B0 x zone window  (?)
- 12358 1F41   dhw state
+ 12358 1F41 x dhw state
  11514 1F09
   6116 1260 x dhw temp
   5495 22D9   --- OpenTherm related
@@ -18,7 +18,7 @@
    760 0100
    654 0004
    247 3120
-   214 10A0   dhw  setpoint (not handled by Domoticz)
+   214 10A0 x dhw  setpoint (not handled by Domoticz)
    159 0418
    149 1100
    133 0009

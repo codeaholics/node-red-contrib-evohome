@@ -118,6 +118,23 @@ describe('getUInt16()', () => {
     });
 });
 
+describe('getDateTime()', () => {
+    test('decodes mins, hrs, day, month, year(BE16) to an ISO-like string', () => {
+        // 00 17 1C 06 07EA → 2026-06-28 23:00
+        expect(msg('00171C0607EA').getDateTime()).toBe('2026-06-28T23:00:00');
+    });
+
+    test('zero-pads each field', () => {
+        // 05 09 01 02 07E9 → 2025-02-01 09:05
+        expect(msg('0509010207E9').getDateTime()).toBe('2025-02-01T09:05:00');
+    });
+
+    test('returns null when the year is 0xFFFF (no date set)', () => {
+        // 00 00 00 00 FFFF
+        expect(msg('00000000FFFF').getDateTime()).toBeNull();
+    });
+});
+
 describe('incorrectSite()', () => {
     test('false when no address is a controller', () => {
         const m = msg('00', {addr0: ZONE, addr1: '--:------', addr2: '--:------'});

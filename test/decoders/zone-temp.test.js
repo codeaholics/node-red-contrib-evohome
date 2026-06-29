@@ -52,6 +52,15 @@ describe('zone-temp decoder (30C9)', () => {
         expect(decode(msg('RQ', ZONE, '00'))).toBeNull();
     });
 
+    test('does not deduplicate — temperatures are a smooth curve', () => {
+        const results = decode(msg('I', CONTROLLER, '000834'), config);
+        expect(results[0].deduplication).toBeUndefined();
+    });
+
+    test('ignores a write (W) — only I and RP are readings', () => {
+        expect(decode(msg('W', CONTROLLER, '000834'), config)).toBeNull();
+    });
+
     test('throws for payload shorter than 3 bytes', () => {
         expect(() => decode(msg('I', ZONE, '0000'))).toThrow('payload too short');
     });

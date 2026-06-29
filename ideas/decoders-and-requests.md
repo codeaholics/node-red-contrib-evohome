@@ -106,18 +106,24 @@ request behaviours on top** — not one merged message object.
 
 ## Concrete near-term suggestion
 
-There is exactly one request builder today, so don't build a unification
-framework yet (YAGNI — the duplication is one string and one `±1`). The small,
-reversible step that captures most of the value:
+**Status:** the 2nd request type (setpoint-override, 2349) has since landed. The
+request-side duplication it would have caused was absorbed by a
+`zone-selector-request` factory (`src/requests/utils/`), mirroring the
+`temperature-decoder` factory — so `zone-temp` and `setpoint-override` share the
+addressing and the zone ±1 logic. Still outstanding from the steps below: the
+`commands.js` enum, and the bidirectional **temperature** codec.
 
-1. Add a `commands.js` enum and reference `COMMANDS.ZONE_TEMP` from both the
-   decoder and the request builder.
-2. When the 2nd/3rd request type arrives (setpoint, DHW), extract the field
-   codecs you find yourself rewriting (temperature, zone number) into
-   bidirectional modules.
+Don't build a full unification framework yet (YAGNI). The small, reversible steps
+that capture most of the remaining value:
+
+1. Add a `commands.js` enum and reference `COMMANDS.ZONE_TEMP` (etc.) from both
+   the decoders and the request builders.
+2. Extract the field codecs still being rewritten — chiefly the **temperature**
+   transform (uint16 ÷ 100, `0x7FFF` = no reading) — into bidirectional modules.
+   (Zone ±1 is now centralised in the request factory and the temperature
+   decoder, so temperature is the main one left.)
 
 Revisit the package-by-command-code reorg once there are ~3 request types and
-the real shape is visible — by then the field codecs will already be factored so
-the move is cheap. Renaming `decoders/` only makes sense if you go that route; in
-the vocabulary-split, decoders stay decoders and you just add a shared kernel
-beneath them.
+the real shape is visible. Renaming `decoders/` only makes sense if you go that
+route; in the vocabulary-split, decoders stay decoders and you just add a shared
+kernel beneath them.

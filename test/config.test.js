@@ -153,6 +153,26 @@ describe('Config', () => {
         });
     });
 
+    describe('hasDhw()', () => {
+        test('true when the controller has a DHW relay configured', () => {
+            const cfg = withDefaults({relays: {dhw: DHW_RELAY}});
+            expect(cfg.hasDhw(CONTROLLER)).toBe(true);
+        });
+
+        test('false when the controller has relays but no DHW', () => {
+            const cfg = withDefaults({relays: {boiler: BOILER_RELAY}});
+            expect(cfg.hasDhw(CONTROLLER)).toBe(false);
+        });
+
+        test('false when the controller has no relays section', () => {
+            expect(withDefaults({relays: undefined}).hasDhw(CONTROLLER)).toBe(false);
+        });
+
+        test('false for an unknown controller', () => {
+            expect(withDefaults().hasDhw(randomControllerAddr())).toBe(false);
+        });
+    });
+
     describe('multi-site (array of configs)', () => {
         const CONTROLLER_B = randomControllerAddr();
         const DEVICE_A = randomZoneAddr();

@@ -8,21 +8,27 @@ const ZONE_TEMP_RQ = {
 
 describe('hgi-encoder', () => {
     test('encodes a zone temp request', () => {
-        expect(encode(ZONE_TEMP_RQ)).toBe('--- RQ --- 18:000730 01:123456 --:------ 30C9 001 00');
+        expect(encode(ZONE_TEMP_RQ)).toBe('RQ --- 18:000730 01:123456 --:------ 30C9 001 00');
+    });
+
+    test('omits the RSSI field (the radio adds it only on receipt)', () => {
+        expect(encode(ZONE_TEMP_RQ).split(' ')).toHaveLength(8);
     });
 
     test('computes the length field from the payload', () => {
         const line = encode({...ZONE_TEMP_RQ, payload: '0007A0'});
-        expect(line.split(' ')[7]).toBe('003');
+        expect(line.split(' ')[6]).toBe('003');
     });
 
     test('uppercases the command and payload', () => {
         const line = encode({...ZONE_TEMP_RQ, cmd: '30c9', payload: 'ab'});
-        expect(line).toBe('--- RQ --- 18:000730 01:123456 --:------ 30C9 001 AB');
+        expect(line).toBe('RQ --- 18:000730 01:123456 --:------ 30C9 001 AB');
     });
 
-    test('round-trips through the parser', () => {
-        const reparsed = parse(encode(ZONE_TEMP_RQ)).parsed;
+    test('round-trips through the parser once the radio prepends an RSSI', () => {
+        // A sent line carries no RSSI; the radio adds one on receipt, so we
+        // prepend a dummy value to parse it back.
+        const reparsed = parse(`045 ${encode(ZONE_TEMP_RQ)}`).parsed;
         expect(reparsed.type).toBe('RQ');
         expect(reparsed.addr).toEqual(['18:000730', '01:123456', '--:------']);
         expect(reparsed.cmd).toBe('30C9');
