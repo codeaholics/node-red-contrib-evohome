@@ -1,11 +1,9 @@
 // DHW on/off state with its override mode and optional until-time. The parallel
 // to SetpointOverride for the hot-water subsystem (mode + until), but the
 // controlled value is on/off, not a temperature.
-//
-// TEMPORARY (testing): writing to 'dhw-state-test'.
 module.exports = function(d) {
     const result = {
-        measurement: 'dhw-state-test',
+        measurement: 'DHWState',
         tags: {
         },
         values: {

@@ -2,12 +2,9 @@
 // effective target is always available from 2309; this measurement carries the
 // override metadata — mode and until — answering "is it overridden, and until
 // when" rather than "what is the target". setpoint is included for completeness.
-//
-// TEMPORARY (testing): writing to 'setpoint-override-test'. Settle the final
-// measurement name before relying on it.
 module.exports = function(d) {
     const result = {
-        measurement: 'setpoint-override-test',
+        measurement: 'SetpointOverride',
         tags: {
         },
         values: {
