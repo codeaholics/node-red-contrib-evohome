@@ -24,20 +24,24 @@ inventory of what Domoticz does actively) and
   accessors, an unused "spy" input on `evohome-active` for future reply-driven
   logic.
 - **Open questions:** (a) does the radio echo our sent packets back? — still
-  unresolved; shapes echo handling and send-confirmation. (b) what does a 2349
-  reply carry for a zone *following its schedule* — a value with mode 0, or
-  `0x7FFF`? This decides whether the override mode refreshes after an override is
-  cleared. Both want a look at real traffic.
+  unresolved; shapes echo handling and send-confirmation. (b) *resolved* — a
+  follow-schedule 2349/1F41 reply carries mode `0` with the value `0x7FFF`, so the
+  decoder records the mode and omits the value; the mode refreshes correctly. (c)
+  does controller **B** answer a poll? It has never been polled (the gateway only
+  ever polled A), and 2349/1F41 are request-driven, so multi-controller coverage
+  is unverified. (d) finalise the `*-test` measurement names before relying on
+  them: `SetpointOverride`, `DHWState`, `DHWSetpoint`.
 
 ### The decoder reality (important)
 
 `src/decoders/index.js` registers every command code, but **most are stubs** that
 return a bare `{decoded: {type}}` with no payload parsing. Actually implemented:
 `zone-temp`, `setpoint` (2309), `setpoint-override` (2349), `dhw-temp`,
-`heat-demand`, `battery-info`, `zone-window`, `actuator-state`. Stubbed
-(recognised, not decoded): `controller-mode` (2E04), `dhw-state` (1F41),
-`zone-info` (000A), `sys-info` (10E0), `device-info` (0418), `zone-name` (0004),
-`external-sensor` (0002), `actuator-check` (3B00), `binding` (1FC9).
+`dhw-state` (1F41), `dhw-setpoint` (10A0), `heat-demand`, `battery-info`,
+`zone-window`, `actuator-state`. Stubbed (recognised, not decoded):
+`controller-mode` (2E04), `zone-info` (000A), `sys-info` (10E0),
+`device-info` (0418), `zone-name` (0004), `external-sensor` (0002),
+`actuator-check` (3B00), `binding` (1FC9).
 
 So a lot of "monitoring completeness" is just **fleshing out stub decoders for
 messages already on the air** — pure passive work, no radio transmission needed.
@@ -86,14 +90,18 @@ Each item is a thin end-to-end slice reusing the proven machinery: real decoder
 (replacing the stub) + request builder + schedule. Ordered by monitoring value.
 
 - **B1. Setpoints — 2349. ✅ Done.** Real `setpoint-override` decoder (zone,
-  setpoint, mode), request builder, and InfluxDB formatter; `evohome-active`
-  polls it per zone. Modelled into the shared `Setpoint` measurement with `mode`
-  as a *field* so `SELECT last(setpoint), last(mode)` reads both in one query.
-  Note: the displayed *value* comes mostly from passive 2309; the 2349 poll's
-  real job is the **override mode**. **Follow-up:** decode the temporary-override
-  **until-time** (the 13-byte form, currently skipped) for "overridden until HH:MM".
-- **B2. DHW state — 1F41.** Whether hot water is calling for heat. Flesh out the
-  `dhw-state` decoder, add request, schedule. (`dhw-temp` 1260 already real.)
+  setpoint, mode, **until**), request builder, InfluxDB formatter; `evohome-active`
+  polls it per zone. Now its **own** `SetpointOverride` measurement (split from
+  `Setpoint`): the effective value comes from passive 2309, so this carries the
+  override metadata (mode + until). The until-time follow-up is done — decoded via
+  the shared override-trailer helper + `Message.getDateTime()`.
+- **B2. DHW state — 1F41. ✅ Done.** Real `dhw-state` decoder (state on/off, mode,
+  until — shares the override-trailer with 2349), per-controller request (only
+  controllers with a configured DHW relay), 5-min poll, InfluxDB `DHWState`
+  measurement. Also added **`dhw-setpoint` (10A0)** — DHW target temp + reheat
+  differential, passive decode only (the cylinder sensor polls it). Measurements
+  are at `*-test` names pending sign-off. 1F41 turned out to **broadcast on
+  change** (not poll-only), so the poll is just baseline-after-restart insurance.
 - **B3. Controller mode — 2E04.** Auto/away/eco/etc. Broadcast on change, so
   polling mainly guarantees you have it after a restart. Flesh out decoder, add
   request, schedule.

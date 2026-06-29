@@ -35,9 +35,11 @@ describe('setpoint override decoder (2349)', () => {
     });
 
     test('decodes temporary mode with a 13-byte until-time payload', () => {
-        const result = decode(msg('I', CONTROLLER, '00083404FFFFFF000000000000'), config);
+        // until = 00 17 1C 06 07EA → 2026-06-28 23:00
+        const result = decode(msg('I', CONTROLLER, '00083404FFFFFF00171C0607EA'), config);
         expect(result.decoded.mode).toBe('Temporary');
         expect(result.decoded.setpoint).toBe(21.00);
+        expect(result.decoded.until).toBe('2026-06-28T23:00:00');
     });
 
     test('records the mode but omits the setpoint when not set (0x7FFF)', () => {
@@ -78,7 +80,7 @@ describe('setpoint override decoder (2349)', () => {
         test('keyed by controller and zone index, value combines setpoint and mode', () => {
             const dedup = decode(msg('I', CONTROLLER, '00083402FFFFFF'), config).deduplication;
             expect(dedup.key.split(';')).toEqual(['SETPOINT_OVERRIDE', CONTROLLER, '1']);
-            expect(dedup.value).toBe('21;Permanent');
+            expect(dedup.value).toBe('21;Permanent;');  // trailing ; = no until
             expect(dedup.seconds).toBe(3600);
         });
 
@@ -93,7 +95,7 @@ describe('setpoint override decoder (2349)', () => {
 
         test('a mode-only change at the same setpoint still emits (different value)', () => {
             const permanent = decode(msg('I', CONTROLLER, '00083402FFFFFF'), config);
-            const temporary = decode(msg('I', CONTROLLER, '00083404FFFFFF000000000000'), config);
+            const temporary = decode(msg('I', CONTROLLER, '00083404FFFFFF00171C0607EA'), config);
             expect(permanent.decoded.setpoint).toBe(temporary.decoded.setpoint);
             expect(permanent.deduplication.value).not.toBe(temporary.deduplication.value);
         });
@@ -106,7 +108,7 @@ describe('setpoint override decoder (2349)', () => {
 
         test('follow-schedule (no setpoint) yields a stable value', () => {
             const dedup = decode(msg('I', CONTROLLER, '007FFF00FFFFFF'), config).deduplication;
-            expect(dedup.value).toBe(';FollowSchedule');
+            expect(dedup.value).toBe(';FollowSchedule;');  // no setpoint, no until
         });
     });
 });

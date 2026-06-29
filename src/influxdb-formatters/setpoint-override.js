@@ -1,18 +1,13 @@
-// Overrides share the 'Setpoint' measurement with scheduled setpoints (2309) so
-// both can be queried together. The override writes a 'mode' field (and a
-// 'setpoint' when one is set); scheduled setpoints write neither anything new nor
-// a 'mode', keeping their existing series unchanged for backward compatibility.
+// Setpoint override is its own measurement, separate from Setpoint (2309). The
+// effective target is always available from 2309; this measurement carries the
+// override metadata — mode and until — answering "is it overridden, and until
+// when" rather than "what is the target". setpoint is included for completeness.
 //
-// 'mode' is a field rather than a tag so a single query can return the current
-// value and the current mode together, even though they arrive on different
-// messages: SELECT last(setpoint), last(mode) FROM Setpoint GROUP BY reportingZone
-//
-// TEMPORARY (testing): writing to 'setpoint-test' rather than 'Setpoint' to keep
-// trial data out of the production measurement. Revert to 'Setpoint' before
-// relying on the unified single-query dashboard described above.
+// TEMPORARY (testing): writing to 'setpoint-override-test'. Settle the final
+// measurement name before relying on it.
 module.exports = function(d) {
     const result = {
-        measurement: 'setpoint-test',
+        measurement: 'setpoint-override-test',
         tags: {
         },
         values: {
@@ -31,6 +26,7 @@ module.exports = function(d) {
 
     putValue('setpoint', d.setpoint);
     putValue('mode', d.mode);
+    putValue('until', d.until);
 
     putTag('device', d.device.addr);
     putTag('deviceType', d.device.type);

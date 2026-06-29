@@ -41,6 +41,11 @@ class Config {
     controllers() { return Object.keys(this.#allControllers); }
 
     zones(controllerAddr) { return Object.keys(this.#allControllers[controllerAddr].zones).map(Number); }
+
+    hasDhw(controllerAddr) {
+        const controller = this.#allControllers[controllerAddr];
+        return Boolean(controller && controller.relays && controller.relays.dhw);
+    }
 }
 
 module.exports = Config;

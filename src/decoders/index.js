@@ -6,6 +6,8 @@ const dhwTemp = require('./dhw-temp');
 const zoneWindow = require('./zone-window');
 const actuatorState = require('./actuator-state');
 const setpointOverride = require('./setpoint-override');
+const dhwState = require('./dhw-state');
+const dhwSetpoint = require('./dhw-setpoint');
 
 function externalSensor() {
     return {
@@ -47,14 +49,6 @@ function sysInfo() {
     };
 }
 
-function dhwState() {
-    return {
-        decoded: {
-            type: 'DHW_STATE'
-        }
-    };
-}
-
 function binding() {
     return {
         decoded: {
@@ -86,6 +80,7 @@ module.exports = {
     '000A': zoneInfo,
     '0418': deviceInfo,
     '1060': batteryInfo,
+    '10A0': dhwSetpoint,
     '10e0': sysInfo,
     '1260': dhwTemp,
     '12B0': zoneWindow,

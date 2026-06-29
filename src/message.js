@@ -50,6 +50,20 @@ class Message {
         this.#p += 2;
         return result;
     }
+
+    // Reads the Evohome 6-byte datetime: mins, hrs, day, month, year (BE16).
+    // Returns an ISO-like local string (YYYY-MM-DDTHH:MM:00) or null when the
+    // year is 0xFFFF (no date set).
+    getDateTime() {
+        const mins = this.getUInt8();
+        const hrs = this.getUInt8();
+        const day = this.getUInt8();
+        const month = this.getUInt8();
+        const year = this.getUInt16();
+        if (year === 0xFFFF) return null;
+        const pad = (n) => String(n).padStart(2, '0');
+        return `${year}-${pad(month)}-${pad(day)}T${pad(hrs)}:${pad(mins)}:00`;
+    }
 }
 
 module.exports = Message;

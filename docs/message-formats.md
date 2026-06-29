@@ -85,13 +85,28 @@ zone(1) setpoint(2) mode(1) FFFFFF(3)  [until-datetime(6)]
 `mode` per the override-mode table below. **Poll-only** — the override mode is
 *only* obtainable by requesting it (the value also comes free via 2309).
 
-### 1F41 — DHW_STATE — observed `RQ`/`RP` only (poll-only)
+### 1F41 — DHW_STATE — observed `I` (on change) + `RQ`/`RP`
 ```
 domain(1) state(1) mode(1) FFFFFF(3)  [until-datetime(6)]
 ```
 6 bytes, or 12 with an until-time. `state`: `00`=off, `01`=on, `FF`=not
-installed. `mode` per the override-mode table. Observed payload `000100FFFFFF` =
-DHW on, follow-schedule. **Poll-only.**
+installed. `mode` per the override-mode table. Observed `000100FFFFFF` = DHW on,
+follow-schedule. **Broadcast on change** (every override change appears as a
+type `I` from the controller) **and pollable** — the poll just fetches the
+current baseline (e.g. after a restart). This is the DHW parallel to 2349: the
+override metadata (mode + until) for the on/off state, *not* a temperature.
+There is no DHW setpoint override.
+
+### 10A0 — DHW_SETPOINT — observed `I` + `RQ`/`RP`
+```
+devno(1) setpoint(2) overrun(1) differential(2)   (6 bytes)
+```
+`setpoint` and `differential` = uint16 ÷ 100 °C. Observed `0017700001F4` =
+target 60.00 °C, differential 5.00 °C (reheat at 55). The DHW target temperature
+and reheat band — the DHW parallel to 2309/2349 (a temperature target). The
+`RQ`/`RP` every ~4 h come from the **cylinder sensor** (`07:…`) polling the
+controller, not from a gateway — so this needs no active poll from us. Domoticz
+never decoded it. `overrun` purpose unconfirmed.
 
 ### 2E04 — CONTROLLER_MODE — observed `RQ`/`RP` (rare broadcast)
 ```
@@ -135,6 +150,15 @@ Open-window / ventilation state per zone. Broadcast.
 | `2` | Permanent |
 | `4` | Temporary (until-time present) |
 
+**Datetime** (the 6-byte until-time in the temporary forms of 2349 and 1F41, and
+2E04 — Domoticz `CEvohomeDateTime`):
+```
+mins(1) hrs(1) day(1) month(1) year(BE16)
+```
+`year == 0xFFFF` means no date. Example `00 17 1C 06 07EA` → 2026-06-28 23:00
+(the next schedule switchpoint). Decoded by `Message.getDateTime()`. Assumed to
+be controller local time.
+
 **Controller mode** (2E04, `m_evoToDczControllerMode`):
 
 | byte | meaning |
@@ -156,10 +180,11 @@ active node's polls are load-bearing for these, not redundant.
 
 - **Broadcast (free, passive):** 2309 setpoint, 30C9 zone-temp (also pollable),
   3150 heat-demand, 0008 controller-heat-demand, 12B0 window, 1060 battery,
-  1F09 sync.
-- **Poll-only (RQ/RP, no `I`):** 2349 setpoint-override, 1F41 DHW-state, 1260
-  DHW-temp, 2E04 controller-mode (rare broadcast), and the OpenTherm set (3220,
-  22D9, 3EF0).
+  1F09 sync, 10A0 DHW-setpoint (also polled by the cylinder sensor).
+- **Broadcast on change + pollable:** 1F41 DHW-state, 2E04 controller-mode (every
+  change appears as `I`; the poll fetches the baseline after a restart).
+- **Poll-only (RQ/RP, no `I`):** 2349 setpoint-override, 1260 DHW-temp, and the
+  OpenTherm set (3220, 22D9, 3EF0).
 
 ## Observed system topology
 
@@ -176,9 +201,9 @@ full multi-controller coverage.
 
 ## Command catalogue (seen on this system)
 
-Decoded today: `30C9`, `2309`, `2349`, `1260`, `3150`, `0008`, `1060`, `12B0`,
-`3EF0` (actuator-state). Stubbed/undecoded but present: `0004`, `000A`, `0418`,
-`10E0`, `1F41`, `1FC9`, `2E04`, `3B00`. Also seen and currently unhandled
+Decoded today: `30C9`, `2309`, `2349`, `1260`, `1F41`, `10A0`, `3150`, `0008`,
+`1060`, `12B0`, `3EF0` (actuator-state). Stubbed/undecoded but present: `0004`,
+`000A`, `0418`, `10E0`, `1FC9`, `2E04`, `3B00`. Also seen and currently unhandled
 (several OpenTherm / sync): `0001`, `0005`, `0009`, `000E`, `0016`, `0100`,
 `042F`, `1030`, `10A0`, `1100`, `1F09`, `1FD4`, `22D9`, `3120`, `313F`, `3220`,
 `3220`, `4611`, `4901`, `4907`.

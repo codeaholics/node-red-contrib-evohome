@@ -1,6 +1,7 @@
 const Config = require('../config');
 const requestZoneTemp = require('../requests/zone-temp');
 const requestSetpointOverride = require('../requests/setpoint-override');
+const requestDhwState = require('../requests/dhw-state');
 
 // The per-zone requests issued every poll cycle. Add a builder here to poll
 // another datum for every zone.
@@ -32,6 +33,11 @@ module.exports = function(RED) {
                         node.queue.push({payload: {parsed: build(controller, zone, gateway)}});
                     });
                 });
+                // DHW state is per-controller, and only for controllers with a
+                // DHW relay configured.
+                if (config.hasDhw(controller)) {
+                    node.queue.push({payload: {parsed: requestDhwState(controller, gateway)}});
+                }
             });
             node.status({fill: 'green', shape: 'dot', text: `queued (${node.queue.length})`});
         }
