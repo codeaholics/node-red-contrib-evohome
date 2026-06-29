@@ -19,7 +19,16 @@ module.exports = function(RED) {
                 const formatted = formatter(msg.payload.decoded);
                 if (formatted) {
                     msg.measurement = formatted.measurement;
-                    msg.payload = [formatted.values, formatted.tags];
+                    // Stamp the point with the single receipt timestamp carried on
+                    // the message (set upstream from the MQTT `ts`), so the live
+                    // write and the backfill land on the same time. The `time` key
+                    // in the fields is consumed as the point timestamp by
+                    // node-red-contrib-influxdb (with msg.precision). This lives in
+                    // the node, not the pure formatters in src/influxdb-formatters —
+                    // those stay time-agnostic so the backfill can supply its own.
+                    const values = {...formatted.values, time: msg.timestamp};
+                    msg.precision = 'ms';
+                    msg.payload = [values, formatted.tags];
                     node.send([msg, null]);
                 }
             }
