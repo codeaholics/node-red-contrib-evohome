@@ -60,6 +60,6 @@ describe('setpoint decoder (2309)', () => {
         const dedup = decode(msg('I', CONTROLLER, '000834'), config)[0].deduplication;
         expect(dedup.key.split(';')).toEqual(['SETPOINT', CONTROLLER, '1']);
         expect(dedup.value).toBe(21.00);
-        expect(dedup.seconds).toBe(3600);
+        expect(dedup.seconds).toBe(900);
     });
 });
