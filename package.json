@@ -38,6 +38,6 @@
         "eslint-config-airbnb": "^16.1.0",
         "eslint-plugin-import": "^2.18.2",
         "pre-commit": "^1.2.2",
-        "vitest": "^3.0.5"
+        "vitest": "^4.1.11"
     }
 }
